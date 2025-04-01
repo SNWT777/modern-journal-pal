@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const Header = () => {
   return (
@@ -22,7 +23,12 @@ const Header = () => {
           </Button>
         </SidebarTrigger>
         <div className="flex items-center">
-          <h1 className="font-bold text-xl text-edu-blue">School Journal</h1>
+          <h1 className="font-bold text-xl text-edu-blue">Школьный Журнал</h1>
+          <div className="ml-2 flex space-x-0.5 h-5">
+            <div className="w-1.5 h-full bg-edu-russian-white"></div>
+            <div className="w-1.5 h-full bg-edu-russian-blue"></div>
+            <div className="w-1.5 h-full bg-edu-russian-red"></div>
+          </div>
         </div>
       </div>
       
@@ -33,17 +39,20 @@ const Header = () => {
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <User className="h-5 w-5" />
+            <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+              <Avatar>
+                <AvatarImage src="" />
+                <AvatarFallback className="bg-edu-russian-blue text-white">ИП</AvatarFallback>
+              </Avatar>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>Мой аккаунт</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem>Профиль</DropdownMenuItem>
+            <DropdownMenuItem>Настройки</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Log out</DropdownMenuItem>
+            <DropdownMenuItem>Выйти</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

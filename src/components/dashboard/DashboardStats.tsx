@@ -27,28 +27,28 @@ const DashboardStats = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <StatCard
-        title="Active Classes"
+        title="Активные классы"
         value={8}
         icon={<BookOpen className="w-5 h-5 text-white" />}
-        color="bg-edu-blue"
+        color="bg-edu-russian-blue"
       />
       <StatCard
-        title="Assignments Due"
+        title="Задания к сдаче"
         value={12}
         icon={<CalendarClock className="w-5 h-5 text-white" />}
         color="bg-edu-yellow"
       />
       <StatCard
-        title="Total Students"
+        title="Всего учеников"
         value={186}
         icon={<Users className="w-5 h-5 text-white" />}
         color="bg-edu-green"
       />
       <StatCard
-        title="Average Grade"
-        value="B+"
+        title="Средняя оценка"
+        value="4.5"
         icon={<GraduationCap className="w-5 h-5 text-white" />}
-        color="bg-edu-accent"
+        color="bg-edu-russian-red"
       />
     </div>
   );

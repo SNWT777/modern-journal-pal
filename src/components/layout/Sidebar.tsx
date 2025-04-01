@@ -8,7 +8,8 @@ import {
   Home, 
   LayoutDashboard, 
   Settings, 
-  Users 
+  Users,
+  LogOut
 } from "lucide-react";
 import { 
   Sidebar, 
@@ -24,27 +25,27 @@ import {
 
 const mainNavItems = [
   {
-    title: "Dashboard",
+    title: "Главная",
     icon: LayoutDashboard,
     path: "/"
   },
   {
-    title: "Classes",
+    title: "Классы",
     icon: BookOpen,
     path: "/classes"
   },
   {
-    title: "Grades",
+    title: "Оценки",
     icon: GraduationCap,
     path: "/grades"
   },
   {
-    title: "Calendar",
+    title: "Расписание",
     icon: Calendar,
     path: "/calendar"
   },
   {
-    title: "Students",
+    title: "Ученики",
     icon: Users,
     path: "/students"
   }
@@ -55,7 +56,11 @@ const AppSidebar = () => {
     <Sidebar className="border-r">
       <SidebarHeader className="p-4">
         <div className="flex items-center space-x-2">
-          <GraduationCap className="h-6 w-6 text-primary" />
+          <div className="flex h-8 w-8 overflow-hidden rounded">
+            <div className="h-full w-1/3 bg-edu-russian-white"></div>
+            <div className="h-full w-1/3 bg-edu-russian-blue"></div>
+            <div className="h-full w-1/3 bg-edu-russian-red"></div>
+          </div>
           <span className="font-bold text-sidebar-foreground">ШКОЛЬНЫЙ ЖУРНАЛ</span>
         </div>
       </SidebarHeader>
@@ -84,9 +89,17 @@ const AppSidebar = () => {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <NavLink to="/settings">
+              <NavLink to="/settings" className={({ isActive }) => isActive ? "text-white bg-sidebar-accent" : ""}>
                 <Settings className="h-5 w-5" />
-                <span>Settings</span>
+                <span>Настройки</span>
+              </NavLink>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <NavLink to="/login">
+                <LogOut className="h-5 w-5" />
+                <span>Выйти</span>
               </NavLink>
             </SidebarMenuButton>
           </SidebarMenuItem>

@@ -64,15 +64,20 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				edu: {
-					blue: '#1e40af',
+					blue: '#0039A6',
 					navy: '#0f172a',
 					lightblue: '#3b82f6',
-					accent: '#fca5a5',
+					accent: '#D52B1E',
 					green: '#22c55e',
-					red: '#ef4444',
+					red: '#D52B1E',
 					yellow: '#eab308',
 					light: '#f8fafc',
-					grey: '#64748b'
+					grey: '#64748b',
+					russian: {
+						blue: '#0039A6',
+						red: '#D52B1E',
+						white: '#FFFFFF'
+					}
 				}
 			},
 			borderRadius: {

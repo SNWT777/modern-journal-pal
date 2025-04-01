@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 224 71% 4%;
 
-    --primary: 221 83% 41%;
+    --primary: 228 83% 32%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -23,7 +23,7 @@
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 0 85% 82%;
+    --accent: 354 85% 56%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
@@ -31,18 +31,18 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221 83% 41%;
+    --ring: 228 83% 32%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 221 83% 16%;
+    --sidebar-background: 228 83% 16%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 221 83% 41%;
+    --sidebar-primary: 228 83% 32%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 221 83% 26%;
+    --sidebar-accent: 228 83% 26%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 221 83% 31%;
-    --sidebar-ring: 221 83% 41%;
+    --sidebar-border: 228 83% 31%;
+    --sidebar-ring: 228 83% 32%;
   }
 
   .dark {
@@ -55,7 +55,7 @@
     --popover: 224 71% 4%;
     --popover-foreground: 210 20% 98%;
 
-    --primary: 221 83% 41%;
+    --primary: 228 83% 41%;
     --primary-foreground: 210 20% 98%;
 
     --secondary: 215 28% 17%;
@@ -64,7 +64,7 @@
     --muted: 215 28% 17%;
     --muted-foreground: 217.9 10.6% 64.9%;
 
-    --accent: 0 85% 62%;
+    --accent: 354 85% 56%;
     --accent-foreground: 210 20% 98%;
 
     --destructive: 0 62.8% 30.6%;
@@ -72,11 +72,11 @@
 
     --border: 215 28% 17%;
     --input: 215 28% 17%;
-    --ring: 221 83% 41%;
+    --ring: 228 83% 32%;
     
     --sidebar-background: 222.2 84% 4.9%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 221 83% 41%;
+    --sidebar-primary: 228 83% 41%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 217.2 32.6% 17.5%;
     --sidebar-accent-foreground: 210 40% 98%;
@@ -107,5 +107,17 @@
   
   .edu-icon {
     @apply p-2 rounded-md bg-primary/10 text-primary;
+  }
+
+  .russian-flag-gradient {
+    @apply bg-gradient-to-b from-[#fff] via-[#0039A6] to-[#D52B1E];
+  }
+  
+  .russian-accent {
+    @apply text-[#D52B1E];
+  }
+  
+  .russian-primary {
+    @apply text-[#0039A6];
   }
 }
