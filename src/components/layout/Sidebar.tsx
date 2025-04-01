@@ -9,7 +9,8 @@ import {
   LayoutDashboard, 
   Settings, 
   Users,
-  LogOut
+  LogOut,
+  BarChart4
 } from "lucide-react";
 import { 
   Sidebar, 
@@ -48,6 +49,11 @@ const mainNavItems = [
     title: "Ученики",
     icon: Users,
     path: "/students"
+  },
+  {
+    title: "Статистика",
+    icon: BarChart4,
+    path: "/statistics"
   }
 ];
 
@@ -56,10 +62,8 @@ const AppSidebar = () => {
     <Sidebar className="border-r">
       <SidebarHeader className="p-4">
         <div className="flex items-center space-x-2">
-          <div className="flex h-8 w-8 overflow-hidden rounded">
-            <div className="h-full w-1/3 bg-edu-russian-white"></div>
-            <div className="h-full w-1/3 bg-edu-russian-blue"></div>
-            <div className="h-full w-1/3 bg-edu-russian-red"></div>
+          <div className="h-8 w-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center text-white font-bold text-xs">
+            ШЖ
           </div>
           <span className="font-bold text-sidebar-foreground">ШКОЛЬНЫЙ ЖУРНАЛ</span>
         </div>
@@ -73,7 +77,11 @@ const AppSidebar = () => {
                   <SidebarMenuButton asChild>
                     <NavLink 
                       to={item.path}
-                      className={({ isActive }) => isActive ? "text-white bg-sidebar-accent" : ""}
+                      className={({ isActive }) => 
+                        isActive 
+                          ? "text-white bg-sidebar-accent" 
+                          : "hover:bg-sidebar-accent/30 transition-colors"
+                      }
                     >
                       <item.icon className="h-5 w-5" />
                       <span>{item.title}</span>
@@ -89,7 +97,14 @@ const AppSidebar = () => {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <NavLink to="/settings" className={({ isActive }) => isActive ? "text-white bg-sidebar-accent" : ""}>
+              <NavLink 
+                to="/settings" 
+                className={({ isActive }) => 
+                  isActive 
+                    ? "text-white bg-sidebar-accent" 
+                    : "hover:bg-sidebar-accent/30 transition-colors"
+                }
+              >
                 <Settings className="h-5 w-5" />
                 <span>Настройки</span>
               </NavLink>
@@ -97,7 +112,10 @@ const AppSidebar = () => {
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <NavLink to="/login">
+              <NavLink 
+                to="/login"
+                className="hover:bg-sidebar-accent/30 transition-colors"
+              >
                 <LogOut className="h-5 w-5" />
                 <span>Выйти</span>
               </NavLink>

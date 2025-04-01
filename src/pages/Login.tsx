@@ -28,33 +28,35 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-background to-muted/50 px-4">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-background/90 to-muted/50 px-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <GraduationCap className="h-12 w-12 text-primary mx-auto mb-2" />
-          <h1 className="text-3xl font-bold text-edu-blue">ШКОЛЬНЫЙ ЖУРНАЛ</h1>
-          <p className="text-muted-foreground">Электронный журнал для школ России</p>
+        <div className="text-center mb-8 animate-fade-in">
+          <GraduationCap className="h-16 w-16 text-primary mx-auto mb-4" />
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            ШКОЛЬНЫЙ ЖУРНАЛ
+          </h1>
+          <p className="text-muted-foreground mt-2">Электронный журнал для школ</p>
         </div>
 
-        <Card className="border-2">
-          <CardHeader>
-            <CardTitle>Войти в систему</CardTitle>
+        <Card className="border-2 shadow-lg overflow-hidden">
+          <CardHeader className="bg-muted/30 pb-4">
+            <CardTitle className="text-xl">Войти в систему</CardTitle>
             <CardDescription>
               Выберите тип учетной записи и введите данные для входа
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="pt-6">
             <Tabs defaultValue="student" className="w-full" onValueChange={setRole}>
               <TabsList className="grid grid-cols-3 mb-6">
-                <TabsTrigger value="student" className="flex items-center gap-2">
+                <TabsTrigger value="student" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   <BookOpen className="h-4 w-4" />
                   <span>Ученик</span>
                 </TabsTrigger>
-                <TabsTrigger value="teacher" className="flex items-center gap-2">
+                <TabsTrigger value="teacher" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   <GraduationCap className="h-4 w-4" />
                   <span>Учитель</span>
                 </TabsTrigger>
-                <TabsTrigger value="parent" className="flex items-center gap-2">
+                <TabsTrigger value="parent" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   <User className="h-4 w-4" />
                   <span>Родитель</span>
                 </TabsTrigger>
@@ -70,6 +72,7 @@ const Login = () => {
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       required
+                      className="transition-all focus-visible:ring-primary"
                     />
                   </div>
                   <div className="space-y-2">
@@ -85,6 +88,7 @@ const Login = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
+                      className="transition-all focus-visible:ring-primary"
                     />
                   </div>
                   <Button type="submit" className="w-full">
@@ -103,6 +107,7 @@ const Login = () => {
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       required
+                      className="transition-all focus-visible:ring-primary"
                     />
                   </div>
                   <div className="space-y-2">
@@ -118,6 +123,7 @@ const Login = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
+                      className="transition-all focus-visible:ring-primary"
                     />
                   </div>
                   <Button type="submit" className="w-full">
@@ -136,6 +142,7 @@ const Login = () => {
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       required
+                      className="transition-all focus-visible:ring-primary"
                     />
                   </div>
                   <div className="space-y-2">
@@ -151,6 +158,7 @@ const Login = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
+                      className="transition-all focus-visible:ring-primary"
                     />
                   </div>
                   <Button type="submit" className="w-full">
@@ -160,7 +168,7 @@ const Login = () => {
               </TabsContent>
             </Tabs>
           </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
+          <CardFooter className="flex flex-col space-y-4 bg-muted/30 mt-4">
             <div className="text-center text-sm text-muted-foreground">
               <span>Нет учетной записи? </span>
               <a href="#" className="text-primary hover:underline">

@@ -72,12 +72,7 @@ export default {
 					red: '#D52B1E',
 					yellow: '#eab308',
 					light: '#f8fafc',
-					grey: '#64748b',
-					russian: {
-						blue: '#0039A6',
-						red: '#D52B1E',
-						white: '#FFFFFF'
-					}
+					grey: '#64748b'
 				}
 			},
 			borderRadius: {
