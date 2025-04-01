@@ -5,12 +5,15 @@ import {
   BookOpen, 
   Calendar, 
   GraduationCap, 
-  Home, 
   LayoutDashboard, 
   Settings, 
   Users,
   LogOut,
-  BarChart4
+  BarChart4,
+  FileText,
+  MessageSquare,
+  Home,
+  Clock
 } from "lucide-react";
 import { 
   Sidebar, 
@@ -23,41 +26,16 @@ import {
   SidebarMenuButton, 
   SidebarMenuItem 
 } from "@/components/ui/sidebar";
-
-const mainNavItems = [
-  {
-    title: "Главная",
-    icon: LayoutDashboard,
-    path: "/"
-  },
-  {
-    title: "Классы",
-    icon: BookOpen,
-    path: "/classes"
-  },
-  {
-    title: "Оценки",
-    icon: GraduationCap,
-    path: "/grades"
-  },
-  {
-    title: "Расписание",
-    icon: Calendar,
-    path: "/calendar"
-  },
-  {
-    title: "Ученики",
-    icon: Users,
-    path: "/students"
-  },
-  {
-    title: "Статистика",
-    icon: BarChart4,
-    path: "/statistics"
-  }
-];
+import { useAuth } from "@/hooks/use-auth";
 
 const AppSidebar = () => {
+  const { user, logout } = useAuth();
+
+  if (!user) return null;
+
+  // Define navigation items based on user role
+  const mainNavItems = getNavItemsByRole(user.role);
+
   return (
     <Sidebar className="border-r">
       <SidebarHeader className="p-4">
@@ -111,20 +89,111 @@ const AppSidebar = () => {
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
-              <NavLink 
-                to="/login"
-                className="hover:bg-sidebar-accent/30 transition-colors"
-              >
-                <LogOut className="h-5 w-5" />
-                <span>Выйти</span>
-              </NavLink>
+            <SidebarMenuButton onClick={logout} className="hover:bg-sidebar-accent/30 transition-colors">
+              <LogOut className="h-5 w-5" />
+              <span>Выйти</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
     </Sidebar>
   );
+};
+
+// Helper function to get navigation items based on user role
+const getNavItemsByRole = (role: string) => {
+  // Common items for all roles
+  const commonItems = [
+    {
+      title: "Главная",
+      icon: LayoutDashboard,
+      path: "/"
+    },
+    {
+      title: "Расписание",
+      icon: Calendar,
+      path: "/calendar"
+    }
+  ];
+
+  // Role-specific items
+  switch (role) {
+    case "admin":
+      return [
+        ...commonItems,
+        {
+          title: "Ученики",
+          icon: Users,
+          path: "/students"
+        },
+        {
+          title: "Классы",
+          icon: BookOpen,
+          path: "/classes"
+        },
+        {
+          title: "Учителя",
+          icon: GraduationCap,
+          path: "/teachers"
+        },
+        {
+          title: "Статистика",
+          icon: BarChart4,
+          path: "/statistics"
+        }
+      ];
+    
+    case "teacher":
+      return [
+        ...commonItems,
+        {
+          title: "Мои классы",
+          icon: BookOpen,
+          path: "/classes"
+        },
+        {
+          title: "Оценки",
+          icon: GraduationCap,
+          path: "/grades"
+        },
+        {
+          title: "Домашние задания",
+          icon: FileText,
+          path: "/assignments"
+        },
+        {
+          title: "Сообщения",
+          icon: MessageSquare,
+          path: "/messages"
+        }
+      ];
+    
+    case "student":
+    default:
+      return [
+        ...commonItems,
+        {
+          title: "Оценки",
+          icon: GraduationCap,
+          path: "/grades"
+        },
+        {
+          title: "Домашние задания",
+          icon: FileText,
+          path: "/assignments"
+        },
+        {
+          title: "Посещаемость",
+          icon: Clock,
+          path: "/attendance"
+        },
+        {
+          title: "Сообщения",
+          icon: MessageSquare,
+          path: "/messages"
+        }
+      ];
+  }
 };
 
 export default AppSidebar;

@@ -5,6 +5,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { ThemeProvider } from "@/hooks/use-theme";
+import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import Header from "@/components/layout/Header";
 import AppSidebar from "@/components/layout/Sidebar";
 import Dashboard from "./pages/Dashboard";
@@ -14,47 +16,85 @@ import Calendar from "./pages/Calendar";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-import { useState } from "react";
+import Students from "./pages/Students";
+import { Loader2 } from "lucide-react";
 
 const queryClient = new QueryClient();
 
-const App = () => {
-  // Simple authentication state (would be more robust in production)
-  const [isAuthenticated, setIsAuthenticated] = useState(true); // Set to true for development
+// Protected route component
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center space-y-4">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          <p className="text-lg text-muted-foreground">Загрузка...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+};
+
+const AppRoutes = () => {
+  const { isAuthenticated } = useAuth();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          {isAuthenticated ? (
-            <SidebarProvider>
-              <div className="min-h-screen flex flex-col w-full">
-                <Header />
-                <div className="flex flex-1 overflow-hidden">
-                  <AppSidebar />
-                  <main className="flex-1 overflow-auto">
-                    <Routes>
-                      <Route path="/" element={<Dashboard />} />
-                      <Route path="/classes" element={<Classes />} />
-                      <Route path="/grades" element={<Grades />} />
-                      <Route path="/calendar" element={<Calendar />} />
-                      <Route path="/settings" element={<Settings />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </main>
-                </div>
+    <Routes>
+      <Route path="/login" element={
+        isAuthenticated ? <Navigate to="/" replace /> : <Login />
+      } />
+      
+      <Route path="/" element={
+        <ProtectedRoute>
+          <SidebarProvider>
+            <div className="min-h-screen flex flex-col w-full">
+              <Header />
+              <div className="flex flex-1 overflow-hidden">
+                <AppSidebar />
+                <main className="flex-1 overflow-auto">
+                  <Routes>
+                    <Route path="/" element={<Dashboard />} />
+                    <Route path="/classes" element={<Classes />} />
+                    <Route path="/grades" element={<Grades />} />
+                    <Route path="/calendar" element={<Calendar />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/students" element={<Students />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
               </div>
-            </SidebarProvider>
-          ) : (
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="*" element={<Navigate to="/login" replace />} />
-            </Routes>
-          )}
-        </BrowserRouter>
-      </TooltipProvider>
+            </div>
+          </SidebarProvider>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
+  );
+};
+
+const App = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <AuthProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <AppRoutes />
+            </BrowserRouter>
+          </TooltipProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };

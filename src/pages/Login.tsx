@@ -6,25 +6,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { GraduationCap, BookOpen, User } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { GraduationCap, BookOpen, User, Loader2 } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("student");
+  const [role, setRole] = useState<"student" | "teacher" | "admin">("student");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { login } = useAuth();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Here we would normally handle authentication
-    // For now, we'll just show a success toast and navigate
-    toast({
-      title: "Вход выполнен",
-      description: `Вы успешно вошли как ${role === "student" ? "ученик" : role === "teacher" ? "учитель" : "родитель"}`,
-    });
-    navigate("/");
+    setIsLoading(true);
+    
+    try {
+      await login(email, password, role);
+      navigate("/");
+    } catch (error) {
+      // Error is handled in the auth context
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -46,7 +49,7 @@ const Login = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
-            <Tabs defaultValue="student" className="w-full" onValueChange={setRole}>
+            <Tabs defaultValue="student" className="w-full" onValueChange={(value) => setRole(value as any)}>
               <TabsList className="grid grid-cols-3 mb-6">
                 <TabsTrigger value="student" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   <BookOpen className="h-4 w-4" />
@@ -56,21 +59,22 @@ const Login = () => {
                   <GraduationCap className="h-4 w-4" />
                   <span>Учитель</span>
                 </TabsTrigger>
-                <TabsTrigger value="parent" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                <TabsTrigger value="admin" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
                   <User className="h-4 w-4" />
-                  <span>Родитель</span>
+                  <span>Админ</span>
                 </TabsTrigger>
               </TabsList>
 
               <TabsContent value="student">
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="username">Имя пользователя</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
-                      id="username"
-                      placeholder="Номер ученика"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
+                      id="email"
+                      type="email"
+                      placeholder="student@school.ru"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       required
                       className="transition-all focus-visible:ring-primary"
                     />
@@ -91,8 +95,15 @@ const Login = () => {
                       className="transition-all focus-visible:ring-primary"
                     />
                   </div>
-                  <Button type="submit" className="w-full">
-                    Войти
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Вход...
+                      </>
+                    ) : (
+                      "Войти"
+                    )}
                   </Button>
                 </form>
               </TabsContent>
@@ -100,12 +111,13 @@ const Login = () => {
               <TabsContent value="teacher">
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="username">Имя пользователя</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
-                      id="username"
-                      placeholder="Логин учителя"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
+                      id="email"
+                      type="email"
+                      placeholder="teacher@school.ru"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       required
                       className="transition-all focus-visible:ring-primary"
                     />
@@ -126,21 +138,29 @@ const Login = () => {
                       className="transition-all focus-visible:ring-primary"
                     />
                   </div>
-                  <Button type="submit" className="w-full">
-                    Войти
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Вход...
+                      </>
+                    ) : (
+                      "Войти"
+                    )}
                   </Button>
                 </form>
               </TabsContent>
 
-              <TabsContent value="parent">
+              <TabsContent value="admin">
                 <form onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="username">Имя пользователя</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
-                      id="username"
-                      placeholder="Логин родителя"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
+                      id="email"
+                      type="email"
+                      placeholder="admin@school.ru"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       required
                       className="transition-all focus-visible:ring-primary"
                     />
@@ -161,8 +181,15 @@ const Login = () => {
                       className="transition-all focus-visible:ring-primary"
                     />
                   </div>
-                  <Button type="submit" className="w-full">
-                    Войти
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Вход...
+                      </>
+                    ) : (
+                      "Войти"
+                    )}
                   </Button>
                 </form>
               </TabsContent>
