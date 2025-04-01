@@ -60,48 +60,117 @@ const Login = () => {
                 </TabsTrigger>
               </TabsList>
 
-              <form onSubmit={handleLogin} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="username">Имя пользователя</Label>
-                  <Input
-                    id="username"
-                    placeholder={role === "student" ? "Номер ученика" : "Имя пользователя"}
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="password">Пароль</Label>
-                    <a href="#" className="text-sm text-primary hover:underline">
-                      Забыли пароль?
-                    </a>
+              <TabsContent value="student">
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="username">Имя пользователя</Label>
+                    <Input
+                      id="username"
+                      placeholder="Номер ученика"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      required
+                    />
                   </div>
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                </div>
-                <Button type="submit" className="w-full">
-                  Войти
-                </Button>
-              </form>
-            </CardContent>
-            <CardFooter className="flex flex-col space-y-4">
-              <div className="text-center text-sm text-muted-foreground">
-                <span>Нет учетной записи? </span>
-                <a href="#" className="text-primary hover:underline">
-                  Обратитесь к администратору школы
-                </a>
-              </div>
-            </CardFooter>
-          </Card>
-        </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="password">Пароль</Label>
+                      <a href="#" className="text-sm text-primary hover:underline">
+                        Забыли пароль?
+                      </a>
+                    </div>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full">
+                    Войти
+                  </Button>
+                </form>
+              </TabsContent>
+
+              <TabsContent value="teacher">
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="username">Имя пользователя</Label>
+                    <Input
+                      id="username"
+                      placeholder="Логин учителя"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="password">Пароль</Label>
+                      <a href="#" className="text-sm text-primary hover:underline">
+                        Забыли пароль?
+                      </a>
+                    </div>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full">
+                    Войти
+                  </Button>
+                </form>
+              </TabsContent>
+
+              <TabsContent value="parent">
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="username">Имя пользователя</Label>
+                    <Input
+                      id="username"
+                      placeholder="Логин родителя"
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="password">Пароль</Label>
+                      <a href="#" className="text-sm text-primary hover:underline">
+                        Забыли пароль?
+                      </a>
+                    </div>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <Button type="submit" className="w-full">
+                    Войти
+                  </Button>
+                </form>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+          <CardFooter className="flex flex-col space-y-4">
+            <div className="text-center text-sm text-muted-foreground">
+              <span>Нет учетной записи? </span>
+              <a href="#" className="text-primary hover:underline">
+                Обратитесь к администратору школы
+              </a>
+            </div>
+          </CardFooter>
+        </Card>
       </div>
+    </div>
   );
 };
 
