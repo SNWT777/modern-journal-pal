@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from "react";
-import { Bell, Menu, User, Moon, Sun, LogOut, Search, BookOpen, Calendar } from "lucide-react";
+import { Bell, Menu, User, Moon, Sun, LogOut, Search, BookOpen, Calendar, Settings } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -140,7 +139,7 @@ const NotificationsDropdown = () => {
               <DropdownMenuItem key={notification.id} className="cursor-pointer p-3 flex flex-col items-start hover:bg-secondary/50 transition-colors duration-200 animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
                 <div className="flex items-center justify-between w-full">
                   <span className="font-medium">{notification.title}</span>
-                  {!notification.read && <Badge variant="accent" className="scale-75">Новое</Badge>}
+                  {!notification.read && <Badge variant="secondary" className="scale-75">Новое</Badge>}
                 </div>
                 <span className="text-sm text-muted-foreground mt-1">{notification.message}</span>
                 <span className="text-xs text-muted-foreground mt-2">{notification.time}</span>
@@ -163,13 +162,11 @@ const UserDropdown = () => {
   
   if (!user) return null;
   
-  // Generate initials from name
   const initials = user.name
     .split(' ')
     .map(n => n[0])
     .join('');
   
-  // Get role display name
   let roleDisplay = "Ученик";
   if (user.role === "admin") {
     roleDisplay = "Администратор";

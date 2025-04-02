@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { 
@@ -57,7 +56,7 @@ const AppSidebar = () => {
         </div>
       </SidebarHeader>
       <SidebarContent className="py-2">
-        <SidebarGroup expanded={expandedGroup === "main"} onExpandedChange={() => toggleGroup("main")}>
+        <SidebarGroup className={expandedGroup === "main" ? "expanded" : ""} onClick={() => toggleGroup("main")}>
           <SidebarGroupLabel className="text-xs uppercase font-bold text-sidebar-foreground/60 tracking-wider">
             Основное
             <ChevronRight className={`h-4 w-4 transition-transform duration-200 ${expandedGroup === "main" ? "rotate-90" : ""}`} />
@@ -102,7 +101,7 @@ const AppSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup expanded={expandedGroup === "academic"} onExpandedChange={() => toggleGroup("academic")}>
+        <SidebarGroup className={expandedGroup === "academic" ? "expanded" : ""} onClick={() => toggleGroup("academic")}>
           <SidebarGroupLabel className="text-xs uppercase font-bold text-sidebar-foreground/60 tracking-wider mt-4">
             Учебный процесс
             <ChevronRight className={`h-4 w-4 transition-transform duration-200 ${expandedGroup === "academic" ? "rotate-90" : ""}`} />
@@ -147,7 +146,7 @@ const AppSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <SidebarGroup expanded={expandedGroup === "favorites"} onExpandedChange={() => toggleGroup("favorites")} className="mt-4">
+        <SidebarGroup className={`mt-4 ${expandedGroup === "favorites" ? "expanded" : ""}`} onClick={() => toggleGroup("favorites")}>
           <SidebarGroupLabel className="text-xs uppercase font-bold text-sidebar-foreground/60 tracking-wider">
             Избранное
             <ChevronRight className={`h-4 w-4 transition-transform duration-200 ${expandedGroup === "favorites" ? "rotate-90" : ""}`} />
