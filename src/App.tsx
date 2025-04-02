@@ -15,6 +15,7 @@ import Grades from "./pages/Grades";
 import Calendar from "./pages/Calendar";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import Students from "./pages/Students";
 import { Loader2 } from "lucide-react";
@@ -51,6 +52,8 @@ const AppRoutes = () => {
       <Route path="/login" element={
         isAuthenticated ? <Navigate to="/" replace /> : <Login />
       } />
+      
+      <Route path="/reset-password" element={<ResetPassword />} />
       
       <Route path="/" element={
         <ProtectedRoute>
