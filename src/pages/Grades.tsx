@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import GradeStudentForm from "@/components/grades/GradeStudentForm";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth";
 
 interface GradeRecord {
   id: number;
@@ -126,17 +127,23 @@ const initialGradeData: GradeRecord[] = [
 ];
 
 const Grades = () => {
+  const { user } = useAuth();
   const [gradeData, setGradeData] = useState(initialGradeData);
   const [searchQuery, setSearchQuery] = useState("");
   const [classFilter, setClassFilter] = useState("all");
   const [gradeFilter, setGradeFilter] = useState("all");
   const [addGradeOpen, setAddGradeOpen] = useState(false);
   
+  // Check if user has teacher/admin role
+  const canAssignGrades = user?.role === "teacher" || user?.role === "admin";
+  
   // Get unique classes from grade data
   const uniqueClasses = Array.from(new Set(gradeData.map(record => record.class)));
   
   // Handle adding a new grade
   const handleGradeSubmitted = (data: any) => {
+    if (!canAssignGrades) return;
+    
     // Find student and assignment names from mock data
     const studentName = data.student === "1" ? "Иван Петров" : 
                         data.student === "2" ? "Анна Смирнова" : 
@@ -175,6 +182,15 @@ const Grades = () => {
     toast.success(`Оценка ${letterGrade} выставлена для ${studentName}`);
   };
   
+  // Handle attempt to create grade by non-teacher
+  const handleAddGradeClick = () => {
+    if (canAssignGrades) {
+      setAddGradeOpen(true);
+    } else {
+      toast.error("Только учителя могут выставлять оценки");
+    }
+  };
+  
   // Filter grades based on search and filters
   const filteredGrades = gradeData.filter(record => {
     // Search filter
@@ -202,7 +218,7 @@ const Grades = () => {
         </div>
         <Button 
           className="mt-4 md:mt-0 blue-white-button"
-          onClick={() => setAddGradeOpen(true)}
+          onClick={handleAddGradeClick}
         >
           <Plus className="mr-2 h-4 w-4" />
           Выставить оценку
@@ -329,12 +345,14 @@ const Grades = () => {
         </CardContent>
       </Card>
       
-      <GradeStudentForm 
-        open={addGradeOpen} 
-        onOpenChange={setAddGradeOpen} 
-        className="Алгебра 9А"
-        onGradeSubmitted={handleGradeSubmitted}
-      />
+      {canAssignGrades && (
+        <GradeStudentForm 
+          open={addGradeOpen} 
+          onOpenChange={setAddGradeOpen} 
+          className="Алгебра 9А"
+          onGradeSubmitted={handleGradeSubmitted}
+        />
+      )}
     </div>
   );
 };

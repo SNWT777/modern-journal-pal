@@ -13,6 +13,7 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { useAuth } from "@/hooks/use-auth";
+import { toast } from "sonner";
 
 // Initial class data
 const initialClassesData = [
@@ -90,6 +91,9 @@ const Classes = () => {
   const [statusFilter, setStatusFilter] = useState("active");
   const [createClassOpen, setCreateClassOpen] = useState(false);
   
+  // Check if user has teacher/admin role
+  const canCreateClass = user?.role === "teacher" || user?.role === "admin";
+  
   // Handle class creation
   const handleClassCreated = (data: any) => {
     const newClass = {
@@ -102,6 +106,15 @@ const Classes = () => {
     };
     
     setClassesData([...classesData, newClass]);
+  };
+  
+  // Handle attempt to create class by non-teacher
+  const handleCreateClassClick = () => {
+    if (canCreateClass) {
+      setCreateClassOpen(true);
+    } else {
+      toast.error("Только учителя могут создавать классы");
+    }
   };
   
   // Filter classes based on search and filters
@@ -130,7 +143,7 @@ const Classes = () => {
         </div>
         <Button 
           className="mt-4 md:mt-0 blue-white-button" 
-          onClick={() => setCreateClassOpen(true)}
+          onClick={handleCreateClassClick}
         >
           <Plus className="mr-2 h-4 w-4" />
           Добавить класс
@@ -214,11 +227,13 @@ const Classes = () => {
         </div>
       )}
       
-      <CreateClassForm 
-        open={createClassOpen} 
-        onOpenChange={setCreateClassOpen}
-        onClassCreated={handleClassCreated}
-      />
+      {canCreateClass && (
+        <CreateClassForm 
+          open={createClassOpen} 
+          onOpenChange={setCreateClassOpen}
+          onClassCreated={handleClassCreated}
+        />
+      )}
     </div>
   );
 };

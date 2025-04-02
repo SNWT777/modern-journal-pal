@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import RecentGrades from "@/components/dashboard/RecentGrades";
@@ -57,7 +56,7 @@ const taskCompletionData = [
   { subject: "История", completion: 40 }
 ];
 
-const quickActionItems = [
+const teacherQuickActionItems = [
   { 
     title: "Создать новый класс",
     icon: BookOpen,
@@ -88,11 +87,46 @@ const quickActionItems = [
   },
 ];
 
+const studentQuickActionItems = [
+  { 
+    title: "Просмотреть расписание",
+    icon: CheckSquare,
+    color: "text-blue-600",
+    bgColor: "bg-blue-100",
+    action: "view-schedule"
+  },
+  { 
+    title: "Проверить задания",
+    icon: FileText,
+    color: "text-green-600",
+    bgColor: "bg-green-100",
+    action: "check-assignments"
+  },
+  { 
+    title: "Посмотреть оценки",
+    icon: BookOpen,
+    color: "text-purple-600",
+    bgColor: "bg-purple-100",
+    action: "view-grades"
+  },
+  { 
+    title: "Материалы курса",
+    icon: Users,
+    color: "text-amber-600",
+    bgColor: "bg-amber-100",
+    action: "course-materials"
+  },
+];
+
 const Dashboard = () => {
   const { user } = useAuth();
   const [tab, setTab] = useState("overview");
   const [createClassOpen, setCreateClassOpen] = useState(false);
   const [gradeStudentOpen, setGradeStudentOpen] = useState(false);
+  
+  const isTeacher = user?.role === "teacher" || user?.role === "admin";
+  
+  const quickActionItems = isTeacher ? teacherQuickActionItems : studentQuickActionItems;
   
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -104,16 +138,36 @@ const Dashboard = () => {
   const handleQuickAction = (action: string) => {
     switch (action) {
       case "create-class":
-        setCreateClassOpen(true);
+        if (isTeacher) {
+          setCreateClassOpen(true);
+        } else {
+          toast.error("Только учителя могут создавать классы");
+        }
         break;
       case "grade-student":
-        setGradeStudentOpen(true);
+        if (isTeacher) {
+          setGradeStudentOpen(true);
+        } else {
+          toast.error("Только учителя могут выставлять оценки");
+        }
         break;
       case "add-student":
         toast.info("Функция добавления учеников будет доступна в ближайшем обновлении");
         break;
       case "create-assignment":
         toast.info("Функция создания заданий будет доступна в ближайшем обновлении");
+        break;
+      case "view-schedule":
+        toast.info("Переход к расписанию занятий");
+        break;
+      case "check-assignments":
+        toast.info("Переход к просмотру заданий");
+        break;
+      case "view-grades":
+        toast.info("Переход к просмотру оценок");
+        break;
+      case "course-materials":
+        toast.info("Переход к материалам курса");
         break;
       default:
         break;
@@ -123,15 +177,21 @@ const Dashboard = () => {
   return (
     <div className="container mx-auto p-6 animate-fade-in">
       <div className="mb-8 blue-white-gradient text-white p-6 rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold mb-2 animate-slide-down">{getGreeting()}, {user?.name || 'Учитель'}!</h1>
-        <p className="text-white/80 animate-slide-down" style={{ animationDelay: '0.1s' }}>Вот ваш обзор на сегодня</p>
+        <h1 className="text-3xl font-bold mb-2 animate-slide-down">{getGreeting()}, {user?.name || 'Пользователь'}!</h1>
+        <p className="text-white/80 animate-slide-down" style={{ animationDelay: '0.1s' }}>
+          {isTeacher ? 'Вот ваш обзор на сегодня' : 'Добро пожаловать в вашу учебную панель'}
+        </p>
       </div>
       
-      {/* Quick Actions Card */}
       <Card className="mb-8 blue-white-card">
         <CardHeader>
           <CardTitle>Быстрые действия</CardTitle>
-          <CardDescription>Воспользуйтесь этими функциями для оперативной работы</CardDescription>
+          <CardDescription>
+            {isTeacher 
+              ? 'Воспользуйтесь этими функциями для оперативной работы' 
+              : 'Быстрый доступ к основным функциям'
+            }
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -223,10 +283,12 @@ const Dashboard = () => {
         <TabsContent value="classes" className="animate-fade-in">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gradient">Ваши классы</h2>
-            <Button className="blue-white-button" onClick={() => setCreateClassOpen(true)}>
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Добавить класс
-            </Button>
+            {isTeacher && (
+              <Button className="blue-white-button" onClick={() => setCreateClassOpen(true)}>
+                <PlusCircle className="mr-2 h-4 w-4" />
+                Добавить класс
+              </Button>
+            )}
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -249,21 +311,24 @@ const Dashboard = () => {
         </TabsContent>
       </Tabs>
       
-      {/* Dialogs */}
-      <CreateClassForm 
-        open={createClassOpen} 
-        onOpenChange={setCreateClassOpen} 
-        onClassCreated={() => {
-          toast.success("Класс успешно создан!");
-          setTab("classes");
-        }}
-      />
-      
-      <GradeStudentForm 
-        open={gradeStudentOpen} 
-        onOpenChange={setGradeStudentOpen}
-        className="Алгебра 9А"
-      />
+      {isTeacher && (
+        <>
+          <CreateClassForm 
+            open={createClassOpen} 
+            onOpenChange={setCreateClassOpen} 
+            onClassCreated={() => {
+              toast.success("Класс успешно создан!");
+              setTab("classes");
+            }}
+          />
+          
+          <GradeStudentForm 
+            open={gradeStudentOpen} 
+            onOpenChange={setGradeStudentOpen}
+            className="Алгебра 9А"
+          />
+        </>
+      )}
     </div>
   );
 };
