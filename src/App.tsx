@@ -19,6 +19,7 @@ import Header from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
 
 import { useAuth } from "@/hooks/use-auth";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 function App() {
   const { user, isAuthenticated } = useAuth();
@@ -29,29 +30,31 @@ function App() {
       <div className="app min-h-screen flex flex-col">
         <Toaster richColors />
         {isAuthenticated ? (
-          <div className="authenticated-layout flex">
-            <Sidebar />
-            
-            <div className="content-wrapper flex-1 flex flex-col">
-              <Header />
+          <SidebarProvider>
+            <div className="authenticated-layout flex">
+              <Sidebar />
               
-              <main className="flex-1 app-content">
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/classes" element={<Classes />} />
-                  <Route path="/students" element={<Students />} />
-                  <Route path="/grades" element={<Grades />} />
-                  <Route path="/schedule" element={<Schedule />} />
-                  <Route path="/calendar" element={<Calendar />} />
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="/login" element={<Navigate to="/dashboard" />} />
-                  <Route path="/reset-password" element={<ResetPassword />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
+              <div className="content-wrapper flex-1 flex flex-col">
+                <Header />
+                
+                <main className="flex-1 app-content">
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/classes" element={<Classes />} />
+                    <Route path="/students" element={<Students />} />
+                    <Route path="/grades" element={<Grades />} />
+                    <Route path="/schedule" element={<Schedule />} />
+                    <Route path="/calendar" element={<Calendar />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/login" element={<Navigate to="/dashboard" />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
+              </div>
             </div>
-          </div>
+          </SidebarProvider>
         ) : (
           <div className="guest-layout flex-1 flex flex-col">
             <Routes>
