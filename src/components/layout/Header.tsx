@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Bell, Menu, User, Moon, Sun, LogOut, Search, BookOpen, Calendar, Settings, PenSquare, UserCheck, Mail, Info, School } from "lucide-react";
 import { 
@@ -16,7 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useTheme } from "@/hooks/use-theme";
 import { useAuth } from "@/hooks/use-auth";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
@@ -35,7 +34,10 @@ const Header = () => {
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
-    toast.success(`Тема переключена на ${theme === "dark" ? "светлую" : "темную"}`);
+    toast({
+      title: "Тема изменена",
+      description: `Тема переключена на ${theme === "dark" ? "светлую" : "темную"}`
+    });
   };
 
   return (
@@ -86,7 +88,10 @@ const NotificationsDropdown = () => {
 
   const markAllAsRead = () => {
     setHasUnread(false);
-    toast.success("Все уведомления отмечены как прочитанные");
+    toast({
+      title: "Уведомления",
+      description: "Все уведомления отмечены как прочитанные"
+    });
   };
 
   return (
@@ -136,10 +141,17 @@ const UserDropdown = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      toast.success("Вы успешно вышли из системы");
+      toast({
+        title: "Выход из системы",
+        description: "Вы успешно вышли из системы"
+      });
       navigate("/login");
     } catch (error) {
-      toast.error("Ошибка при выходе из системы");
+      toast({
+        title: "Ошибка",
+        description: "Ошибка при выходе из системы",
+        variant: "destructive"
+      });
     }
   };
 

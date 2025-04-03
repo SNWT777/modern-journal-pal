@@ -11,7 +11,7 @@ import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import CreateClassForm from "@/components/classes/CreateClassForm";
 import GradeStudentForm from "@/components/grades/GradeStudentForm";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 
 const classesData = [
@@ -141,33 +141,59 @@ const Dashboard = () => {
         if (isTeacher) {
           setCreateClassOpen(true);
         } else {
-          toast.error("Только учителя могут создавать классы");
+          toast({
+            title: "Ошибка",
+            description: "Только учителя могут создавать классы", 
+            variant: "destructive"
+          });
         }
         break;
       case "grade-student":
         if (isTeacher) {
           setGradeStudentOpen(true);
         } else {
-          toast.error("Только учителя могут выставлять оценки");
+          toast({
+            title: "Ошибка",
+            description: "Только учителя могут выставлять оценки", 
+            variant: "destructive"
+          });
         }
         break;
       case "add-student":
-        toast.info("Функция добавления учеников будет доступна в ближайшем обновлении");
+        toast({
+          title: "Информация",
+          description: "Функция добавления учеников будет доступна в ближайшем обновлении"
+        });
         break;
       case "create-assignment":
-        toast.info("Функция создания заданий будет доступна в ближайшем обновлении");
+        toast({
+          title: "Информация",
+          description: "Функция создания заданий будет доступна в ближайшем обновлении"
+        });
         break;
       case "view-schedule":
-        toast.info("Переход к расписанию занятий");
+        toast({
+          title: "Информация",
+          description: "Переход к расписанию занятий"
+        });
         break;
       case "check-assignments":
-        toast.info("Переход к просмотру заданий");
+        toast({
+          title: "Информация",
+          description: "Переход к просмотру заданий"
+        });
         break;
       case "view-grades":
-        toast.info("Переход к просмотру оценок");
+        toast({
+          title: "Информация",
+          description: "Переход к просмотру оценок"
+        });
         break;
       case "course-materials":
-        toast.info("Переход к материалам курса");
+        toast({
+          title: "Информация",
+          description: "Переход к материалам курса"
+        });
         break;
       default:
         break;
@@ -317,7 +343,10 @@ const Dashboard = () => {
             open={createClassOpen} 
             onOpenChange={setCreateClassOpen} 
             onClassCreated={() => {
-              toast.success("Класс успешно создан!");
+              toast({
+                title: "Успех",
+                description: "Класс успешно создан!"
+              });
               setTab("classes");
             }}
           />

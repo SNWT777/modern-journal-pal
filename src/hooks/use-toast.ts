@@ -1,8 +1,5 @@
 
 import { type ToastProps } from "@/components/ui/toast";
-import {
-  useToast as useToastOriginal,
-} from "@radix-ui/react-toast";
 
 type ToasterToast = ToastProps & {
   id: string;
@@ -66,12 +63,7 @@ const toastState: ToastStateType = {
 };
 
 export function useToast() {
-  const { ...originalHook } = useToastOriginal();
-  
-  return {
-    ...toastState,
-    ...originalHook,
-  };
+  return toastState;
 }
 
 export const toast: ToastActionType = (props) => {

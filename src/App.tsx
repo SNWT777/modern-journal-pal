@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Toaster } from "sonner";
+import { Toaster } from "@/components/ui/toaster";
 
 import Index from "@/pages/Index";
 import Dashboard from "@/pages/Dashboard";
@@ -28,7 +28,7 @@ function App() {
   return (
     <BrowserRouter>
       <div className="app min-h-screen flex flex-col">
-        <Toaster richColors />
+        <Toaster />
         {isAuthenticated ? (
           <SidebarProvider>
             <div className="authenticated-layout flex">
