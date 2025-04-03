@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "@/hooks/use-toast";
 
 const Login = () => {
-  const [activeTab, setActiveTab] = useState<"login" | "register">("login");
+  const [loginMode, setLoginMode] = useState<"login" | "register">("login");
   const [resetPasswordDialogOpen, setResetPasswordDialogOpen] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -76,7 +76,7 @@ const Login = () => {
         description: "Проверьте электронную почту для подтверждения аккаунта.",
         variant: "default",
       });
-      setActiveTab("login");
+      setLoginMode("login");
     } catch (error) {
       // Error is handled in auth context
     }
@@ -194,14 +194,14 @@ const Login = () => {
             <CardHeader className="bg-muted/20 space-y-1 pb-4">
               <div className="flex justify-between items-center">
                 <CardTitle className="text-2xl">
-                  {activeTab === "login" ? "Добро пожаловать" : "Создание аккаунта"}
+                  {loginMode === "login" ? "Добро пожаловать" : "Создание аккаунта"}
                 </CardTitle>
                 
-                {activeTab === "register" && (
+                {loginMode === "register" && (
                   <Button 
                     variant="ghost" 
                     size="sm"
-                    onClick={() => setActiveTab("login")}
+                    onClick={() => setLoginMode("login")}
                     className="flex items-center text-sm"
                   >
                     <ArrowLeft className="h-4 w-4 mr-1" />
@@ -210,14 +210,14 @@ const Login = () => {
                 )}
               </div>
               <CardDescription>
-                {activeTab === "login" 
+                {loginMode === "login" 
                   ? "Войдите в систему, чтобы продолжить" 
                   : "Заполните форму для регистрации"}
               </CardDescription>
             </CardHeader>
 
-            {activeTab === "login" ? (
-              <>
+            {loginMode === "login" ? (
+              <div>
                 <CardContent className="pt-6">
                   <Tabs defaultValue="student" className="w-full" onValueChange={(value) => setRole(value as any)}>
                     <TabsList className="grid grid-cols-3 mb-6 p-1">
@@ -431,13 +431,13 @@ const Login = () => {
                     <Button 
                       variant="link" 
                       className="p-0 h-auto font-medium text-primary"
-                      onClick={() => setActiveTab("register")}
+                      onClick={() => setLoginMode("register")}
                     >
                       Зарегистрироваться
                     </Button>
                   </div>
                 </CardFooter>
-              </>
+              </div>
             ) : (
               <CardContent className="pt-6">
                 <Form {...registerForm}>
