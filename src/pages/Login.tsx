@@ -6,14 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { GraduationCap, BookOpen, User, Loader2, ArrowLeft, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { GraduationCap, BookOpen, User, Loader2, ArrowLeft, Mail, Lock, Eye, EyeOff, CheckCircle2, School } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 
 const Login = () => {
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
@@ -33,7 +33,11 @@ const Login = () => {
     e.preventDefault();
     try {
       await login(email, password);
-      toast.success("Успешный вход в систему");
+      toast({
+        title: "Успешный вход",
+        description: "Добро пожаловать в систему",
+        variant: "default",
+      });
       navigate("/");
     } catch (error) {
       // Error is handled in auth context
@@ -67,7 +71,11 @@ const Login = () => {
   const onRegisterSubmit = async (values: z.infer<typeof registerSchema>) => {
     try {
       await signup(values.email, values.password, values.role, values.name);
-      toast.success("Регистрация успешна! Проверьте электронную почту для подтверждения.");
+      toast({
+        title: "Успешная регистрация!",
+        description: "Проверьте электронную почту для подтверждения аккаунта.",
+        variant: "default",
+      });
       setActiveTab("login");
     } catch (error) {
       // Error is handled in auth context
@@ -88,7 +96,11 @@ const Login = () => {
   const onResetPasswordSubmit = async (values: z.infer<typeof resetPasswordSchema>) => {
     try {
       await resetPassword(values.email);
-      toast.success("Инструкции по сбросу пароля отправлены на вашу почту");
+      toast({
+        title: "Сброс пароля",
+        description: "Инструкции по сбросу пароля отправлены на вашу почту",
+        variant: "default",
+      });
       setResetPasswordDialogOpen(false);
     } catch (error) {
       // Error is handled in auth context
@@ -104,53 +116,81 @@ const Login = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-background/90 to-muted/50">
-      <div className="hidden lg:flex flex-1 bg-muted/30 items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/10 z-0" />
+    <div className="flex min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/10">
+      <div className="hidden lg:flex flex-1 items-center justify-center relative overflow-hidden animate-fade-in">
+        <div className="absolute inset-0 z-0 bg-pattern-grid opacity-5"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/5 z-0"></div>
+        
         <div className="relative z-10 flex flex-col items-center max-w-2xl mx-auto px-8 py-12 text-center">
-          <GraduationCap className="h-24 w-24 text-primary mb-8 animate-bounce" />
-          <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+          <div className="glass-card p-6 rounded-full mb-8 animate-bounce duration-2000">
+            <School className="h-20 w-20 text-primary" />
+          </div>
+          
+          <h1 className="text-6xl font-bold mb-6 text-gradient animate-slide-in">
             ШКОЛЬНЫЙ ЖУРНАЛ
           </h1>
-          <p className="text-xl text-muted-foreground mb-8">
+          
+          <p className="text-xl text-muted-foreground mb-12 max-w-md mx-auto animate-fade-in" style={{ animationDelay: "0.2s" }}>
             Современная платформа для эффективного управления образовательным процессом
           </p>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
-            <div className="bg-background/70 backdrop-blur-sm p-6 rounded-xl shadow-lg">
-              <BookOpen className="h-10 w-10 text-primary mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Для учеников</h3>
-              <p className="text-muted-foreground">Удобный доступ к расписанию, домашним заданиям и оценкам</p>
+            <div className="glass-card rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 staggered-fade-in">
+              <div className="p-6 flex flex-col items-center">
+                <div className="rounded-full bg-primary/10 p-4 mb-4">
+                  <BookOpen className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Для учеников</h3>
+                <p className="text-muted-foreground text-center">Удобный доступ к расписанию, домашним заданиям и оценкам</p>
+              </div>
             </div>
-            <div className="bg-background/70 backdrop-blur-sm p-6 rounded-xl shadow-lg">
-              <GraduationCap className="h-10 w-10 text-primary mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Для учителей</h3>
-              <p className="text-muted-foreground">Инструменты для ведения журнала, выставления оценок и учета посещаемости</p>
+            
+            <div className="glass-card rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 staggered-fade-in" style={{ animationDelay: "0.2s" }}>
+              <div className="p-6 flex flex-col items-center">
+                <div className="rounded-full bg-primary/10 p-4 mb-4">
+                  <GraduationCap className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Для учителей</h3>
+                <p className="text-muted-foreground text-center">Инструменты для ведения журнала, выставления оценок и учета посещаемости</p>
+              </div>
             </div>
-            <div className="bg-background/70 backdrop-blur-sm p-6 rounded-xl shadow-lg">
-              <User className="h-10 w-10 text-primary mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Для администрации</h3>
-              <p className="text-muted-foreground">Полный контроль над образовательным процессом и аналитикой</p>
+            
+            <div className="glass-card rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 staggered-fade-in" style={{ animationDelay: "0.4s" }}>
+              <div className="p-6 flex flex-col items-center">
+                <div className="rounded-full bg-primary/10 p-4 mb-4">
+                  <User className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Для администрации</h3>
+                <p className="text-muted-foreground text-center">Полный контроль над образовательным процессом и аналитикой</p>
+              </div>
             </div>
-            <div className="bg-background/70 backdrop-blur-sm p-6 rounded-xl shadow-lg">
-              <Mail className="h-10 w-10 text-primary mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Уведомления</h3>
-              <p className="text-muted-foreground">Мгновенные уведомления о важных событиях для всех пользователей</p>
+            
+            <div className="glass-card rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 staggered-fade-in" style={{ animationDelay: "0.6s" }}>
+              <div className="p-6 flex flex-col items-center">
+                <div className="rounded-full bg-primary/10 p-4 mb-4">
+                  <Mail className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Уведомления</h3>
+                <p className="text-muted-foreground text-center">Мгновенные уведомления о важных событиях для всех пользователей</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
       
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 animate-slide-in">
         <div className="w-full max-w-md">
-          <div className="text-center mb-8 lg:hidden">
-            <GraduationCap className="h-16 w-16 text-primary mx-auto mb-4" />
+          <div className="text-center mb-10 lg:hidden animate-fade-in">
+            <div className="inline-flex items-center justify-center p-4 bg-primary/10 rounded-full mb-4">
+              <School className="h-16 w-16 text-primary" />
+            </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
               ШКОЛЬНЫЙ ЖУРНАЛ
             </h1>
-            <p className="text-muted-foreground mt-2">Электронный журнал для школ</p>
+            <p className="text-muted-foreground mt-2">Электронный журнал для современной школы</p>
           </div>
 
-          <Card className="border shadow-lg overflow-hidden backdrop-blur-sm bg-background/90">
+          <Card className="border shadow-xl overflow-hidden glass-card animate-scale-in">
             <CardHeader className="bg-muted/20 space-y-1 pb-4">
               <div className="flex justify-between items-center">
                 <CardTitle className="text-2xl">
@@ -180,16 +220,16 @@ const Login = () => {
               <>
                 <CardContent className="pt-6">
                   <Tabs defaultValue="student" className="w-full" onValueChange={(value) => setRole(value as any)}>
-                    <TabsList className="grid grid-cols-3 mb-6">
-                      <TabsTrigger value="student" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                    <TabsList className="grid grid-cols-3 mb-6 p-1">
+                      <TabsTrigger value="student" className="flex items-center gap-2">
                         <BookOpen className="h-4 w-4" />
                         <span>Ученик</span>
                       </TabsTrigger>
-                      <TabsTrigger value="teacher" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                      <TabsTrigger value="teacher" className="flex items-center gap-2">
                         <GraduationCap className="h-4 w-4" />
                         <span>Учитель</span>
                       </TabsTrigger>
-                      <TabsTrigger value="admin" className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+                      <TabsTrigger value="admin" className="flex items-center gap-2">
                         <User className="h-4 w-4" />
                         <span>Админ</span>
                       </TabsTrigger>
@@ -199,8 +239,8 @@ const Login = () => {
                       <form onSubmit={handleLogin} className="space-y-4">
                         <div className="space-y-2">
                           <Label htmlFor="email">Email</Label>
-                          <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <div className="relative group">
+                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <Input
                               id="email"
                               type="email"
@@ -218,14 +258,14 @@ const Login = () => {
                             <Button 
                               type="button" 
                               variant="link" 
-                              className="p-0 h-auto text-sm"
+                              className="p-0 h-auto text-sm text-primary/80 hover:text-primary"
                               onClick={() => setResetPasswordDialogOpen(true)}
                             >
                               Забыли пароль?
                             </Button>
                           </div>
-                          <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <div className="relative group">
+                            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <Input
                               id="password"
                               type={showPassword ? "text" : "password"}
@@ -262,8 +302,8 @@ const Login = () => {
                       <form onSubmit={handleLogin} className="space-y-4">
                         <div className="space-y-2">
                           <Label htmlFor="email">Email</Label>
-                          <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <div className="relative group">
+                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <Input
                               id="email"
                               type="email"
@@ -281,14 +321,14 @@ const Login = () => {
                             <Button 
                               type="button" 
                               variant="link" 
-                              className="p-0 h-auto text-sm"
+                              className="p-0 h-auto text-sm text-primary/80 hover:text-primary"
                               onClick={() => setResetPasswordDialogOpen(true)}
                             >
                               Забыли пароль?
                             </Button>
                           </div>
-                          <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <div className="relative group">
+                            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <Input
                               id="password"
                               type={showPassword ? "text" : "password"}
@@ -325,8 +365,8 @@ const Login = () => {
                       <form onSubmit={handleLogin} className="space-y-4">
                         <div className="space-y-2">
                           <Label htmlFor="email">Email</Label>
-                          <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <div className="relative group">
+                            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <Input
                               id="email"
                               type="email"
@@ -344,14 +384,14 @@ const Login = () => {
                             <Button 
                               type="button" 
                               variant="link" 
-                              className="p-0 h-auto text-sm"
+                              className="p-0 h-auto text-sm text-primary/80 hover:text-primary"
                               onClick={() => setResetPasswordDialogOpen(true)}
                             >
                               Забыли пароль?
                             </Button>
                           </div>
-                          <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <div className="relative group">
+                            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                             <Input
                               id="password"
                               type={showPassword ? "text" : "password"}
@@ -386,9 +426,13 @@ const Login = () => {
                   </Tabs>
                 </CardContent>
                 <CardFooter className="flex flex-col space-y-4 bg-muted/20 mt-4">
-                  <div className="text-center text-sm text-muted-foreground">
-                    <span>Нет учетной записи? </span>
-                    <Button variant="link" className="p-0 h-auto" onClick={() => setActiveTab("register")}>
+                  <div className="text-center text-sm">
+                    <span className="text-muted-foreground">Нет учетной записи? </span>
+                    <Button 
+                      variant="link" 
+                      className="p-0 h-auto font-medium text-primary"
+                      onClick={() => setActiveTab("register")}
+                    >
                       Зарегистрироваться
                     </Button>
                   </div>
@@ -405,8 +449,8 @@ const Login = () => {
                         <FormItem>
                           <FormLabel>Имя и фамилия</FormLabel>
                           <FormControl>
-                            <div className="relative">
-                              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <div className="relative group">
+                              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                               <Input placeholder="Иван Иванов" className="pl-10" {...field} />
                             </div>
                           </FormControl>
@@ -422,8 +466,8 @@ const Login = () => {
                         <FormItem>
                           <FormLabel>Email</FormLabel>
                           <FormControl>
-                            <div className="relative">
-                              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <div className="relative group">
+                              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                               <Input type="email" placeholder="example@school.ru" className="pl-10" {...field} />
                             </div>
                           </FormControl>
@@ -439,8 +483,8 @@ const Login = () => {
                         <FormItem>
                           <FormLabel>Пароль</FormLabel>
                           <FormControl>
-                            <div className="relative">
-                              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <div className="relative group">
+                              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                               <Input 
                                 type={showPassword ? "text" : "password"} 
                                 className="pl-10 pr-10" 
@@ -469,8 +513,8 @@ const Login = () => {
                         <FormItem>
                           <FormLabel>Подтвердите пароль</FormLabel>
                           <FormControl>
-                            <div className="relative">
-                              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                            <div className="relative group">
+                              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                               <Input 
                                 type={showConfirmPassword ? "text" : "password"} 
                                 className="pl-10 pr-10" 
@@ -502,8 +546,8 @@ const Login = () => {
                             <div className="grid grid-cols-3 gap-2">
                               <Button 
                                 type="button"
-                                variant={field.value === "student" ? "default" : "outline"}
-                                className={`flex items-center justify-center gap-2 ${field.value === "student" ? "bg-primary text-primary-foreground" : ""}`}
+                                variant="outline"
+                                className={`flex items-center justify-center gap-2 transition-all ${field.value === "student" ? "bg-primary text-primary-foreground border-primary" : ""}`}
                                 onClick={() => field.onChange("student")}
                               >
                                 <BookOpen className="h-4 w-4" />
@@ -511,8 +555,8 @@ const Login = () => {
                               </Button>
                               <Button 
                                 type="button"
-                                variant={field.value === "teacher" ? "default" : "outline"}
-                                className={`flex items-center justify-center gap-2 ${field.value === "teacher" ? "bg-primary text-primary-foreground" : ""}`}
+                                variant="outline"
+                                className={`flex items-center justify-center gap-2 transition-all ${field.value === "teacher" ? "bg-primary text-primary-foreground border-primary" : ""}`}
                                 onClick={() => field.onChange("teacher")}
                               >
                                 <GraduationCap className="h-4 w-4" />
@@ -520,8 +564,8 @@ const Login = () => {
                               </Button>
                               <Button 
                                 type="button"
-                                variant={field.value === "admin" ? "default" : "outline"}
-                                className={`flex items-center justify-center gap-2 ${field.value === "admin" ? "bg-primary text-primary-foreground" : ""}`}
+                                variant="outline"
+                                className={`flex items-center justify-center gap-2 transition-all ${field.value === "admin" ? "bg-primary text-primary-foreground border-primary" : ""}`}
                                 onClick={() => field.onChange("admin")}
                               >
                                 <User className="h-4 w-4" />
@@ -554,7 +598,7 @@ const Login = () => {
 
       {/* Password Reset Dialog */}
       <Dialog open={resetPasswordDialogOpen} onOpenChange={setResetPasswordDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px] glass-card">
           <DialogHeader>
             <DialogTitle>Сброс пароля</DialogTitle>
             <DialogDescription>
@@ -571,8 +615,8 @@ const Login = () => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                      <div className="relative group">
+                        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
                         <Input type="email" placeholder="your@email.com" className="pl-10" {...field} />
                       </div>
                     </FormControl>
@@ -582,7 +626,11 @@ const Login = () => {
               />
               
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setResetPasswordDialogOpen(false)}>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setResetPasswordDialogOpen(false)}
+                >
                   Отмена
                 </Button>
                 <Button type="submit" disabled={isLoading}>
