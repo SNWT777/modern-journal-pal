@@ -1,11 +1,11 @@
 
 import React, { useState } from "react";
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Clock, MapPin, BookOpen, User, List, Filter, Calendar, Download, PlusCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, Clock, MapPin, BookOpen, User, List, Filter, Download, PlusCircle } from "lucide-react";
 import { format, addDays, subDays, getDay, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar as CalendarUI } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -192,15 +192,15 @@ const Schedule = () => {
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" className="min-w-[240px] justify-start text-left font-normal">
-                <CalendarIcon className="mr-2 h-4 w-4" />
+                <PlusCircle className="mr-2 h-4 w-4" />
                 {formattedDate}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
+              <CalendarUI
                 mode="single"
                 selected={date}
-                onSelect={(date) => date && setDate(date)}
+                onSelect={(newDate) => newDate && setDate(newDate)}
                 initialFocus
               />
             </PopoverContent>
@@ -354,7 +354,7 @@ const Schedule = () => {
                 ) : (
                   <div className="text-center py-10">
                     <div className="mx-auto w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-4">
-                      <Calendar className="h-8 w-8 text-blue-500" />
+                      <PlusCircle className="h-8 w-8 text-blue-500" />
                     </div>
                     <h3 className="text-lg font-medium mb-2">Нет занятий</h3>
                     <p className="text-muted-foreground">На этот день не запланировано уроков</p>

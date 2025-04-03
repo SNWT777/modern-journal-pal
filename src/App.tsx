@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
@@ -20,13 +21,8 @@ import Sidebar from "@/components/layout/Sidebar";
 import { useAuth } from "@/hooks/use-auth";
 
 function App() {
-  const { authState, refreshAuth } = useAuth();
-  const isAuthenticated = authState.isAuthenticated;
+  const { user, isAuthenticated } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  useEffect(() => {
-    refreshAuth();
-  }, [refreshAuth]);
 
   return (
     <BrowserRouter>
@@ -34,10 +30,10 @@ function App() {
         <Toaster richColors />
         {isAuthenticated ? (
           <div className="authenticated-layout flex">
-            <Sidebar isOpen={sidebarOpen} toggle={() => setSidebarOpen(!sidebarOpen)} />
+            <Sidebar />
             
             <div className="content-wrapper flex-1 flex flex-col">
-              <Header toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+              <Header />
               
               <main className="flex-1 app-content">
                 <Routes>
