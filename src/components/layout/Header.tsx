@@ -1,19 +1,21 @@
+
 import React, { useState, useEffect } from "react";
-import { Bell, Menu, User, Moon, Sun, LogOut, Search, BookOpen, Calendar, Settings } from "lucide-react";
+import { Bell, Menu, User, Moon, Sun, LogOut, Search, BookOpen, Calendar, Settings, PenSquare, UserCheck, Mail, Info, School } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
   DropdownMenuItem, 
   DropdownMenuLabel, 
   DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+  DropdownMenuTrigger,
+  DropdownMenuGroup
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useTheme } from "@/hooks/use-theme";
 import { useAuth } from "@/hooks/use-auth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -45,6 +47,7 @@ const Header = () => {
           </Button>
         </SidebarTrigger>
         <Link to="/" className="group flex items-center">
+          <School className="h-7 w-7 mr-2 text-primary transition-all group-hover:scale-110" />
           <h1 className="font-bold text-xl bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent group-hover:scale-110 transition-transform duration-300">
             Школьный Журнал
           </h1>
@@ -63,7 +66,7 @@ const Header = () => {
         </div>
       </div>
       <div className="flex items-center space-x-3">
-        <Button variant="ghost" size="icon" onClick={toggleTheme} className="hover:bg-primary/10 text-foreground transition-transform active:scale-90 animate-bounce">
+        <Button variant="ghost" size="icon" onClick={toggleTheme} className="hover:bg-primary/10 text-foreground">
           {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
         </Button>
         <NotificationsDropdown />
@@ -74,11 +77,153 @@ const Header = () => {
 };
 
 const NotificationsDropdown = () => {
-  return <div>Notifications</div>;
+  const [hasUnread, setHasUnread] = useState(true);
+  const notifications = [
+    { id: 1, title: "Новые оценки", message: "Выставлены оценки по математике", time: "10 мин назад", read: false },
+    { id: 2, title: "Изменение в расписании", message: "Завтра урок физики перенесен", time: "2 часа назад", read: false },
+    { id: 3, title: "Домашнее задание", message: "Новое задание по литературе", time: "Вчера", read: true },
+  ];
+
+  const markAllAsRead = () => {
+    setHasUnread(false);
+    toast.success("Все уведомления отмечены как прочитанные");
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="relative hover:bg-primary/10">
+          <Bell className="h-5 w-5" />
+          {hasUnread && (
+            <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center bg-red-500">
+              <span className="text-[10px] font-bold">3</span>
+            </Badge>
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-80" align="end" forceMount>
+        <DropdownMenuLabel className="flex items-center justify-between">
+          <span>Уведомления</span>
+          <Button variant="ghost" size="sm" className="h-auto text-xs p-1" onClick={markAllAsRead}>
+            Отметить все как прочитанные
+          </Button>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {notifications.map((notification) => (
+          <DropdownMenuItem key={notification.id} className="p-0 focus:bg-secondary cursor-default">
+            <div className={`w-full px-2 py-3 ${notification.read ? "" : "bg-primary/5"}`}>
+              <div className="flex justify-between items-start">
+                <span className="font-medium text-sm">{notification.title}</span>
+                <span className="text-xs text-muted-foreground">{notification.time}</span>
+              </div>
+              <p className="text-sm text-muted-foreground mt-1">{notification.message}</p>
+            </div>
+          </DropdownMenuItem>
+        ))}
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild className="justify-center cursor-pointer font-medium text-primary">
+          <Link to="/notifications">Все уведомления</Link>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 };
 
 const UserDropdown = () => {
-  return <div>User</div>;
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast.success("Вы успешно вышли из системы");
+      navigate("/login");
+    } catch (error) {
+      toast.error("Ошибка при выходе из системы");
+    }
+  };
+
+  const getInitials = () => {
+    if (!user?.name) return "ПП";
+    return user.name
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const getRoleLabel = () => {
+    switch (user?.role) {
+      case "student":
+        return "Ученик";
+      case "teacher":
+        return "Учитель";
+      case "admin":
+        return "Администратор";
+      default:
+        return "Пользователь";
+    }
+  };
+  
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="rounded-full overflow-hidden h-10 w-10 border border-border">
+          <Avatar className="h-10 w-10">
+            <AvatarImage src={user?.avatar_url || ""} />
+            <AvatarFallback className="bg-primary/10 text-primary">{getInitials()}</AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="end">
+        <div className="flex flex-col p-2 gap-2">
+          <div className="flex items-center gap-2">
+            <Avatar className="h-10 w-10">
+              <AvatarImage src={user?.avatar_url || ""} />
+              <AvatarFallback className="bg-primary/10 text-primary">{getInitials()}</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <span className="font-medium">{user?.name || "Пользователь"}</span>
+              <span className="text-xs text-muted-foreground">{getRoleLabel()}</span>
+            </div>
+          </div>
+        </div>
+        <DropdownMenuSeparator />
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link to="/profile" className="flex w-full cursor-pointer">
+              <User className="mr-2 h-4 w-4" />
+              <span>Профиль</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/grades" className="flex w-full cursor-pointer">
+              <PenSquare className="mr-2 h-4 w-4" />
+              <span>Мои оценки</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/schedule" className="flex w-full cursor-pointer">
+              <Calendar className="mr-2 h-4 w-4" />
+              <span>Расписание</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to="/settings" className="flex w-full cursor-pointer">
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Настройки</span>
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem className="text-red-500 focus:text-red-500 cursor-pointer" onClick={handleLogout}>
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>Выйти</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 };
 
 export default Header;
