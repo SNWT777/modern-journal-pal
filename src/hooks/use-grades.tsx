@@ -36,11 +36,19 @@ export function useGrades() {
       const { data, error: gradesError } = await supabase
         .from('grades')
         .select(`
-          *,
-          student:student_id(name),
-          class:class_id(name),
-          assignment:assignment_id(title),
-          grader:graded_by(name)
+          id,
+          student_id,
+          class_id,
+          assignment_id,
+          grade,
+          comments,
+          submitted_at,
+          graded_at,
+          graded_by,
+          student:profiles!student_id(name),
+          class:classes!class_id(name),
+          assignment:assignments!assignment_id(title),
+          grader:profiles!graded_by(name)
         `)
         .order('graded_at', { ascending: false });
 

@@ -34,7 +34,7 @@ export function useClasses() {
         .from('classes')
         .select(`
           *,
-          teacher:teacher_id(name)
+          teacher:profiles!teacher_id(name)
         `)
         .order('created_at', { ascending: false });
 

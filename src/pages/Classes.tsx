@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Plus, Search, Filter } from "lucide-react";
 import ClassCard from "@/components/classes/ClassCard";
