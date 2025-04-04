@@ -83,6 +83,12 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			fontSize: {
+				// Размеры для поддержки масштабирования
+				'theme-small': 'var(--font-size-small)',
+				'theme-base': 'var(--font-size-base)',
+				'theme-large': 'var(--font-size-large)',
+			},
 			keyframes: {
 				'accordion-down': {
 					from: {
