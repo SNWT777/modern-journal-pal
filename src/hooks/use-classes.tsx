@@ -29,10 +29,13 @@ export function useClasses() {
     setError(null);
 
     try {
-      // Query classes based on user role
+      // Query classes table
       const { data: classesData, error: classesError } = await supabase
         .from('classes')
-        .select('*, profiles:teacher_id(name)')
+        .select(`
+          *,
+          teacher:teacher_id(name)
+        `)
         .order('created_at', { ascending: false });
 
       if (classesError) throw classesError;
@@ -49,20 +52,20 @@ export function useClasses() {
             console.error('Error fetching student count:', countError);
             return {
               ...classItem,
-              teacher_name: classItem.profiles?.name || "Преподаватель",
+              teacher_name: classItem.teacher?.name || "Преподаватель",
               student_count: 0
             };
           }
 
           return {
             ...classItem,
-            teacher_name: classItem.profiles?.name || "Преподаватель",
+            teacher_name: classItem.teacher?.name || "Преподаватель",
             student_count: count || 0
           };
         })
       );
 
-      setClasses(classesWithStudentCount);
+      setClasses(classesWithStudentCount as ClassData[]);
     } catch (err) {
       console.error("Error fetching classes:", err);
       setError(err instanceof Error ? err : new Error('Failed to fetch classes'));

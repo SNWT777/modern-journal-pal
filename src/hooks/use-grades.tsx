@@ -62,7 +62,7 @@ export function useGrades() {
         grader_name: grade.grader?.name
       }));
 
-      setGrades(formattedGrades);
+      setGrades(formattedGrades as GradeData[]);
     } catch (err) {
       console.error("Error fetching grades:", err);
       setError(err instanceof Error ? err : new Error('Failed to fetch grades'));

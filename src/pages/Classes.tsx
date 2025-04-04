@@ -178,7 +178,7 @@ const Classes = () => {
                 name={classItem.name}
                 subject={classItem.subject}
                 teacher={classItem.teacher_name || "Преподаватель"}
-                studentCount={classItem.student_count || 0}
+                studentCount={classItem.student_count !== undefined ? Number(classItem.student_count) : 0}
                 color={classItem.color}
               />
             </div>
