@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { FileText, Plus, Search, Filter, Download, BarChart3, Calendar, ChevronDown, CheckCircle2 } from "lucide-react";
 import { 
@@ -150,17 +149,13 @@ const Grades = () => {
   const [addGradeOpen, setAddGradeOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("recent");
   
-  // Check if user has teacher/admin role
   const canAssignGrades = user?.role === "teacher" || user?.role === "admin";
   
-  // Get unique classes from grade data
   const uniqueClasses = Array.from(new Set(gradeData.map(record => record.class)));
   
-  // Handle adding a new grade
   const handleGradeSubmitted = (data: any) => {
     if (!canAssignGrades) return;
     
-    // Find student and assignment names from mock data
     const studentName = data.student === "1" ? "Иван Петров" : 
                         data.student === "2" ? "Анна Смирнова" : 
                         data.student === "3" ? "Михаил Иванов" : 
@@ -171,34 +166,29 @@ const Grades = () => {
                            data.assignment === "3" ? "Тест по теме «Многочлены»" : 
                            data.assignment === "4" ? "Самостоятельная работа" : "Итоговый проект";
     
-    // Convert numeric grade to letter grade
     const letterGrade = data.grade === "5" ? "A" : 
                         data.grade === "4" ? "B+" : 
                         data.grade === "3" ? "C" : 
                         data.grade === "2" ? "D" : 
                         data.grade === "Н" ? "Н" : "Зачет";
     
-    // Create a date for today
     const today = new Date();
     const formattedDate = `${today.getDate().toString().padStart(2, '0')}.${(today.getMonth() + 1).toString().padStart(2, '0')}.${today.getFullYear()}`;
     
-    // Create new grade record
     const newGrade: GradeRecord = {
       id: gradeData.length + 1,
       student: studentName,
-      class: "Математика", // Default for this example
+      class: "Математика",
       assignment: assignmentName,
       grade: letterGrade,
       submitted: formattedDate,
       graded: formattedDate
     };
     
-    // Add to grade data
     setGradeData([newGrade, ...gradeData]);
     toast.success(`Оценка ${letterGrade} выставлена для ${studentName}`);
   };
   
-  // Handle attempt to create grade by non-teacher
   const handleAddGradeClick = () => {
     if (canAssignGrades) {
       setAddGradeOpen(true);
@@ -207,18 +197,14 @@ const Grades = () => {
     }
   };
   
-  // Filter grades based on search and filters
   const filteredGrades = gradeData.filter(record => {
-    // Search filter
     const matchesSearch = searchQuery === "" || 
       record.student.toLowerCase().includes(searchQuery.toLowerCase()) ||
       record.assignment.toLowerCase().includes(searchQuery.toLowerCase());
     
-    // Class filter
     const matchesClass = classFilter === "all" || 
       record.class.toLowerCase() === classFilter.toLowerCase();
     
-    // Grade filter
     const matchesGrade = gradeFilter === "all" || 
       record.grade.startsWith(gradeFilter.toUpperCase());
     
@@ -227,7 +213,6 @@ const Grades = () => {
 
   return (
     <div className="container mx-auto p-6 animate-fade-in">
-      {/* Header Section */}
       <div className="relative mb-8 p-8 rounded-lg bg-gradient-to-r from-blue-600 to-blue-500 text-white overflow-hidden">
         <div className="relative z-10">
           <h1 className="text-3xl font-bold mb-2">Журнал оценок</h1>
@@ -251,7 +236,6 @@ const Grades = () => {
         </div>
       </div>
       
-      {/* Quick Actions */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <Tabs 
           value={activeTab} 
@@ -309,161 +293,163 @@ const Grades = () => {
       
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
         <div className="lg:col-span-3">
-          <TabsContent value="recent" className="mt-0">
-            <Card className="shadow-sm hover:shadow-md transition-shadow duration-200">
-              <CardHeader className="pb-0 flex flex-row justify-between items-center">
-                <div>
-                  <CardTitle className="flex items-center">
-                    <FileText className="mr-2 h-5 w-5 text-blue-600" />
-                    Журнал оценок
-                  </CardTitle>
-                  <CardDescription>
-                    Всего записей: {filteredGrades.length}
-                  </CardDescription>
-                </div>
-                
-                <div className="flex flex-wrap gap-2">
-                  <Select 
-                    defaultValue="all"
-                    value={classFilter}
-                    onValueChange={setClassFilter}
-                  >
-                    <SelectTrigger className="w-36">
-                      <SelectValue placeholder="Класс" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Все классы</SelectItem>
-                      {uniqueClasses.map((className, index) => (
-                        <SelectItem key={index} value={className.toLowerCase()}>
-                          {className}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsContent value="recent" className="mt-0">
+              <Card className="shadow-sm hover:shadow-md transition-shadow duration-200">
+                <CardHeader className="pb-0 flex flex-row justify-between items-center">
+                  <div>
+                    <CardTitle className="flex items-center">
+                      <FileText className="mr-2 h-5 w-5 text-blue-600" />
+                      Журнал оценок
+                    </CardTitle>
+                    <CardDescription>
+                      Всего записей: {filteredGrades.length}
+                    </CardDescription>
+                  </div>
                   
-                  <Select 
-                    defaultValue="all"
-                    value={gradeFilter}
-                    onValueChange={setGradeFilter}
-                  >
-                    <SelectTrigger className="w-36">
-                      <SelectValue placeholder="Оценка" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Все оценки</SelectItem>
-                      <SelectItem value="a">A (Отлично)</SelectItem>
-                      <SelectItem value="b">B (Хорошо)</SelectItem>
-                      <SelectItem value="c">C (Удовлетворительно)</SelectItem>
-                      <SelectItem value="d">D (Неудовлетворительно)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </CardHeader>
-              
-              <CardContent className="p-0 mt-6">
-                <div className="relative px-6">
-                  <div className="absolute inset-y-0 left-6 flex items-center pl-3 pointer-events-none">
-                    <Search className="h-4 w-4 text-muted-foreground" />
-                  </div>
-                  <Input 
-                    placeholder="Поиск по ученику или заданию..." 
-                    className="pl-10" 
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-                
-                {filteredGrades.length === 0 ? (
-                  <div className="p-6 text-center">
-                    <div className="mx-auto w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-4">
-                      <FileText className="h-8 w-8 text-blue-500" />
-                    </div>
-                    <h3 className="text-lg font-medium mb-2">Оценки не найдены</h3>
-                    <p className="text-muted-foreground mb-4">По заданным критериям не найдено ни одной оценки</p>
-                    <Button 
-                      variant="outline"
-                      onClick={() => {
-                        setSearchQuery("");
-                        setClassFilter("all");
-                        setGradeFilter("all");
-                      }}
+                  <div className="flex flex-wrap gap-2">
+                    <Select 
+                      defaultValue="all"
+                      value={classFilter}
+                      onValueChange={setClassFilter}
                     >
-                      Сбросить фильтры
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="rounded-md border overflow-hidden mt-6">
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="bg-blue-50 dark:bg-blue-900/20">
-                          <TableHead>Ученик</TableHead>
-                          <TableHead>Класс</TableHead>
-                          <TableHead>Задание</TableHead>
-                          <TableHead>Оценка</TableHead>
-                          <TableHead>Сдано</TableHead>
-                          <TableHead>Проверено</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {filteredGrades.map((record, index) => (
-                          <TableRow 
-                            key={record.id}
-                            className={`transition-colors hover:bg-blue-50/50 cursor-pointer staggered-item staggered-fade-in`}
-                            style={{ animationDelay: `${index * 0.05}s` }}
-                          >
-                            <TableCell className="font-medium">{record.student}</TableCell>
-                            <TableCell>{record.class}</TableCell>
-                            <TableCell>{record.assignment}</TableCell>
-                            <TableCell>
-                              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                record.grade.startsWith('A') ? 'bg-green-100 text-green-800' : 
-                                record.grade.startsWith('B') ? 'bg-blue-100 text-blue-800' :
-                                record.grade.startsWith('C') ? 'bg-yellow-100 text-yellow-800' :
-                                'bg-red-100 text-red-800'
-                              }`}>
-                                {record.grade}
-                              </span>
-                            </TableCell>
-                            <TableCell>{record.submitted}</TableCell>
-                            <TableCell>{record.graded}</TableCell>
-                          </TableRow>
+                      <SelectTrigger className="w-36">
+                        <SelectValue placeholder="Класс" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Все классы</SelectItem>
+                        {uniqueClasses.map((className, index) => (
+                          <SelectItem key={index} value={className.toLowerCase()}>
+                            {className}
+                          </SelectItem>
                         ))}
-                      </TableBody>
-                    </Table>
+                      </SelectContent>
+                    </Select>
+                    
+                    <Select 
+                      defaultValue="all"
+                      value={gradeFilter}
+                      onValueChange={setGradeFilter}
+                    >
+                      <SelectTrigger className="w-36">
+                        <SelectValue placeholder="Оценка" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Все оценки</SelectItem>
+                        <SelectItem value="a">A (Отлично)</SelectItem>
+                        <SelectItem value="b">B (Хорошо)</SelectItem>
+                        <SelectItem value="c">C (Удовлетворительно)</SelectItem>
+                        <SelectItem value="d">D (Неудовлетворительно)</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                )}
-              </CardContent>
-              
-              <CardFooter className="flex justify-between border-t p-4 mt-4">
-                <div className="text-sm text-muted-foreground">
-                  Показано {filteredGrades.length} из {gradeData.length} записей
-                </div>
-                <Button variant="outline" size="sm">
-                  Загрузить еще
-                </Button>
-              </CardFooter>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="analysis" className="mt-0">
-            <GradesStatistics />
-          </TabsContent>
-          
-          <TabsContent value="missing" className="mt-0">
-            <Card className="shadow-sm">
-              <CardHeader>
-                <CardTitle>Пропуски занятий</CardTitle>
-                <CardDescription>
-                  Учет посещаемости и пропусков
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-8">
-                  <p className="text-muted-foreground">Данные о пропусках будут доступны в следующем обновлении</p>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+                </CardHeader>
+                
+                <CardContent className="p-0 mt-6">
+                  <div className="relative px-6">
+                    <div className="absolute inset-y-0 left-6 flex items-center pl-3 pointer-events-none">
+                      <Search className="h-4 w-4 text-muted-foreground" />
+                    </div>
+                    <Input 
+                      placeholder="Поиск по ученику или заданию..." 
+                      className="pl-10" 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                  
+                  {filteredGrades.length === 0 ? (
+                    <div className="p-6 text-center">
+                      <div className="mx-auto w-16 h-16 rounded-full bg-blue-50 flex items-center justify-center mb-4">
+                        <FileText className="h-8 w-8 text-blue-500" />
+                      </div>
+                      <h3 className="text-lg font-medium mb-2">Оценки не найдены</h3>
+                      <p className="text-muted-foreground mb-4">По заданным критериям не найдено ни одной оценки</p>
+                      <Button 
+                        variant="outline"
+                        onClick={() => {
+                          setSearchQuery("");
+                          setClassFilter("all");
+                          setGradeFilter("all");
+                        }}
+                      >
+                        Сбросить фильтры
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="rounded-md border overflow-hidden mt-6">
+                      <Table>
+                        <TableHeader>
+                          <TableRow className="bg-blue-50 dark:bg-blue-900/20">
+                            <TableHead>Ученик</TableHead>
+                            <TableHead>Класс</TableHead>
+                            <TableHead>Задание</TableHead>
+                            <TableHead>Оценка</TableHead>
+                            <TableHead>Сдано</TableHead>
+                            <TableHead>Проверено</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {filteredGrades.map((record, index) => (
+                            <TableRow 
+                              key={record.id}
+                              className={`transition-colors hover:bg-blue-50/50 cursor-pointer staggered-item staggered-fade-in`}
+                              style={{ animationDelay: `${index * 0.05}s` }}
+                            >
+                              <TableCell className="font-medium">{record.student}</TableCell>
+                              <TableCell>{record.class}</TableCell>
+                              <TableCell>{record.assignment}</TableCell>
+                              <TableCell>
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                  record.grade.startsWith('A') ? 'bg-green-100 text-green-800' : 
+                                  record.grade.startsWith('B') ? 'bg-blue-100 text-blue-800' :
+                                  record.grade.startsWith('C') ? 'bg-yellow-100 text-yellow-800' :
+                                  'bg-red-100 text-red-800'
+                                }`}>
+                                  {record.grade}
+                                </span>
+                              </TableCell>
+                              <TableCell>{record.submitted}</TableCell>
+                              <TableCell>{record.graded}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </CardContent>
+                
+                <CardFooter className="flex justify-between border-t p-4 mt-4">
+                  <div className="text-sm text-muted-foreground">
+                    Показано {filteredGrades.length} из {gradeData.length} записей
+                  </div>
+                  <Button variant="outline" size="sm">
+                    Загрузить еще
+                  </Button>
+                </CardFooter>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="analysis" className="mt-0">
+              <GradesStatistics />
+            </TabsContent>
+            
+            <TabsContent value="missing" className="mt-0">
+              <Card className="shadow-sm">
+                <CardHeader>
+                  <CardTitle>Пропуски занятий</CardTitle>
+                  <CardDescription>
+                    Учет посещаемости и пропусков
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground">Данные о пропусках будут доступны в следующем обновлении</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
         
         <div>
