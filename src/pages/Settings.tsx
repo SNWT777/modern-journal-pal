@@ -7,26 +7,22 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { useTheme } from "@/hooks/use-theme";
-import { Check, Moon, Sun, Laptop, Palette, RefreshCcw } from "lucide-react";
+import { Check, Moon, Sun, Laptop, Palette, RefreshCcw, Type } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 const Settings = () => {
-  const { toast } = useToast();
-  const { theme, setTheme } = useTheme();
-  const [fontSize, setFontSize] = useState("medium");
-  const [colorScheme, setColorScheme] = useState("blue");
+  const { theme, setTheme, colorScheme, setColorScheme, fontSize, setFontSize } = useTheme();
 
   const saveSettings = () => {
-    toast({
-      title: "Настройки сохранены",
+    toast("Настройки сохранены", {
       description: "Ваши настройки были успешно сохранены.",
     });
   };
 
-  // Доступные цветовые схемы
+  // Available color schemes
   const colorSchemes = [
     { name: "Синяя", value: "blue", primaryColor: "bg-blue-500", accentColor: "bg-blue-300" },
     { name: "Зеленая", value: "green", primaryColor: "bg-green-500", accentColor: "bg-green-300" },
@@ -94,26 +90,36 @@ const Settings = () => {
         <TabsContent value="appearance" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Внешний вид</CardTitle>
+              <CardTitle className="flex items-center">
+                <Palette className="mr-2 h-5 w-5 text-primary" />
+                Внешний вид
+              </CardTitle>
               <CardDescription>
-                Настройте внешний вид приложения.
+                Настройте внешний вид приложения по вашему вкусу.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Выбор темы */}
+            <CardContent className="space-y-8">
+              {/* Theme selection */}
               <div className="space-y-4">
-                <Label className="text-base">Тема оформления</Label>
+                <Label className="text-base font-medium flex items-center">
+                  <Sun className="mr-2 h-5 w-5 text-yellow-500" />
+                  Тема оформления
+                </Label>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <Card 
-                    className={cn("cursor-pointer transition-all", 
-                      theme === "light" ? "border-primary ring-2 ring-primary" : "hover:border-primary/50")}
+                    className={cn(
+                      "cursor-pointer transition-all hover:shadow-md duration-300",
+                      theme === "light" ? "ring-2 ring-primary border-primary" : "hover:border-primary/50"
+                    )}
                     onClick={() => setTheme("light")}
                   >
-                    <CardContent className="p-4 flex flex-col items-center justify-center space-y-2">
-                      <Sun className="h-8 w-8 text-yellow-500" />
-                      <span>Светлая</span>
+                    <CardContent className="p-4 flex flex-col items-center justify-center space-y-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-white to-slate-100 rounded-full flex items-center justify-center shadow-sm">
+                        <Sun className="h-6 w-6 text-yellow-500" />
+                      </div>
+                      <span className="font-medium">Светлая</span>
                       {theme === "light" && (
-                        <Badge className="absolute top-2 right-2 bg-primary">
+                        <Badge className="bg-primary text-primary-foreground">
                           <Check className="h-3 w-3 mr-1" />
                           Выбрана
                         </Badge>
@@ -122,15 +128,19 @@ const Settings = () => {
                   </Card>
                   
                   <Card 
-                    className={cn("cursor-pointer transition-all", 
-                      theme === "dark" ? "border-primary ring-2 ring-primary" : "hover:border-primary/50")}
+                    className={cn(
+                      "cursor-pointer transition-all hover:shadow-md duration-300",
+                      theme === "dark" ? "ring-2 ring-primary border-primary" : "hover:border-primary/50"
+                    )}
                     onClick={() => setTheme("dark")}
                   >
-                    <CardContent className="p-4 flex flex-col items-center justify-center space-y-2">
-                      <Moon className="h-8 w-8 text-blue-500" />
-                      <span>Темная</span>
+                    <CardContent className="p-4 flex flex-col items-center justify-center space-y-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-slate-800 to-slate-900 rounded-full flex items-center justify-center shadow-sm">
+                        <Moon className="h-6 w-6 text-blue-400" />
+                      </div>
+                      <span className="font-medium">Темная</span>
                       {theme === "dark" && (
-                        <Badge className="absolute top-2 right-2 bg-primary">
+                        <Badge className="bg-primary text-primary-foreground">
                           <Check className="h-3 w-3 mr-1" />
                           Выбрана
                         </Badge>
@@ -139,15 +149,19 @@ const Settings = () => {
                   </Card>
                   
                   <Card 
-                    className={cn("cursor-pointer transition-all", 
-                      theme === "system" ? "border-primary ring-2 ring-primary" : "hover:border-primary/50")}
+                    className={cn(
+                      "cursor-pointer transition-all hover:shadow-md duration-300",
+                      theme === "system" ? "ring-2 ring-primary border-primary" : "hover:border-primary/50"
+                    )}
                     onClick={() => setTheme("system")}
                   >
-                    <CardContent className="p-4 flex flex-col items-center justify-center space-y-2">
-                      <Laptop className="h-8 w-8 text-gray-500" />
-                      <span>Системная</span>
+                    <CardContent className="p-4 flex flex-col items-center justify-center space-y-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-700 dark:to-slate-800 rounded-full flex items-center justify-center shadow-sm">
+                        <Laptop className="h-6 w-6 text-gray-700 dark:text-gray-300" />
+                      </div>
+                      <span className="font-medium">Системная</span>
                       {theme === "system" && (
-                        <Badge className="absolute top-2 right-2 bg-primary">
+                        <Badge className="bg-primary text-primary-foreground">
                           <Check className="h-3 w-3 mr-1" />
                           Выбрана
                         </Badge>
@@ -157,63 +171,170 @@ const Settings = () => {
                 </div>
               </div>
 
-              {/* Выбор размера шрифта */}
-              <div className="space-y-2">
-                <Label htmlFor="fontSize">Размер шрифта</Label>
-                <Select value={fontSize} onValueChange={setFontSize}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Выберите размер шрифта" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="small">Маленький</SelectItem>
-                    <SelectItem value="medium">Средний</SelectItem>
-                    <SelectItem value="large">Большой</SelectItem>
-                  </SelectContent>
-                </Select>
+              {/* Font size selection */}
+              <div className="space-y-4">
+                <Label className="text-base font-medium flex items-center">
+                  <Type className="mr-2 h-5 w-5 text-primary" />
+                  Размер шрифта
+                </Label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <Card 
+                    className={cn(
+                      "cursor-pointer transition-all hover:shadow-md duration-300",
+                      fontSize === "small" ? "ring-2 ring-primary border-primary" : "hover:border-primary/50"
+                    )}
+                    onClick={() => setFontSize("small")}
+                  >
+                    <CardContent className="p-4 flex flex-col items-center justify-center space-y-2">
+                      <span className="text-sm">Aa</span>
+                      <span>Маленький</span>
+                      {fontSize === "small" && (
+                        <Badge className="bg-primary text-primary-foreground">
+                          <Check className="h-3 w-3 mr-1" />
+                          Выбран
+                        </Badge>
+                      )}
+                    </CardContent>
+                  </Card>
+                  
+                  <Card 
+                    className={cn(
+                      "cursor-pointer transition-all hover:shadow-md duration-300",
+                      fontSize === "medium" ? "ring-2 ring-primary border-primary" : "hover:border-primary/50"
+                    )}
+                    onClick={() => setFontSize("medium")}
+                  >
+                    <CardContent className="p-4 flex flex-col items-center justify-center space-y-2">
+                      <span className="text-base">Aa</span>
+                      <span>Средний</span>
+                      {fontSize === "medium" && (
+                        <Badge className="bg-primary text-primary-foreground">
+                          <Check className="h-3 w-3 mr-1" />
+                          Выбран
+                        </Badge>
+                      )}
+                    </CardContent>
+                  </Card>
+                  
+                  <Card 
+                    className={cn(
+                      "cursor-pointer transition-all hover:shadow-md duration-300",
+                      fontSize === "large" ? "ring-2 ring-primary border-primary" : "hover:border-primary/50"
+                    )}
+                    onClick={() => setFontSize("large")}
+                  >
+                    <CardContent className="p-4 flex flex-col items-center justify-center space-y-2">
+                      <span className="text-lg">Aa</span>
+                      <span>Большой</span>
+                      {fontSize === "large" && (
+                        <Badge className="bg-primary text-primary-foreground">
+                          <Check className="h-3 w-3 mr-1" />
+                          Выбран
+                        </Badge>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
               </div>
 
-              {/* Выбор цветовой схемы */}
+              {/* Color scheme selection */}
               <div className="space-y-4">
-                <Label className="text-base">Цветовая схема</Label>
+                <Label className="text-base font-medium flex items-center">
+                  <Palette className="mr-2 h-5 w-5 text-primary" />
+                  Цветовая схема
+                </Label>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   {colorSchemes.map((scheme) => (
                     <Card 
                       key={scheme.value}
-                      className={cn("cursor-pointer transition-all border-2", 
-                        colorScheme === scheme.value ? "border-primary ring-2 ring-primary" : "hover:border-primary/50")}
-                      onClick={() => setColorScheme(scheme.value)}
+                      className={cn(
+                        "cursor-pointer transition-all hover:shadow-md border-2",
+                        colorScheme === scheme.value ? "ring-2 ring-primary border-primary" : "hover:border-primary/50"
+                      )}
+                      onClick={() => setColorScheme(scheme.value as any)}
                     >
-                      <CardContent className="p-3 flex items-center space-x-2">
-                        <div className="flex space-x-1">
-                          <div className={`w-4 h-4 rounded ${scheme.primaryColor}`}></div>
-                          <div className={`w-4 h-4 rounded ${scheme.accentColor}`}></div>
+                      <CardContent className="p-3 flex flex-col items-center space-y-2">
+                        <div className="flex space-x-1 mt-2">
+                          <div className={`w-5 h-5 rounded-full ${scheme.primaryColor}`}></div>
+                          <div className={`w-5 h-5 rounded-full ${scheme.accentColor}`}></div>
                         </div>
                         <span className="text-sm">{scheme.name}</span>
+                        {colorScheme === scheme.value && (
+                          <Badge className="bg-primary text-primary-foreground text-xs">
+                            <Check className="h-3 w-3 mr-1" />
+                            Выбрана
+                          </Badge>
+                        )}
                       </CardContent>
                     </Card>
                   ))}
                 </div>
               </div>
 
-              {/* Сброс настроек */}
-              <div className="pt-2">
-                <Button variant="outline" className="w-full" onClick={() => {
-                  setTheme("system");
-                  setFontSize("medium");
-                  setColorScheme("blue");
-                  toast({
-                    title: "Настройки сброшены",
-                    description: "Все настройки внешнего вида возвращены к значениям по умолчанию.",
-                  });
-                }}>
+              {/* Reset settings */}
+              <div className="pt-4">
+                <Button 
+                  variant="outline" 
+                  className="w-full hover:bg-secondary/80 transition-colors" 
+                  onClick={() => {
+                    setTheme("system");
+                    setFontSize("medium");
+                    setColorScheme("blue");
+                    toast("Настройки сброшены", {
+                      description: "Все настройки внешнего вида возвращены к значениям по умолчанию.",
+                    });
+                  }}
+                >
                   <RefreshCcw className="mr-2 h-4 w-4" />
                   Сбросить все настройки
                 </Button>
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={saveSettings} className="mr-2">Сохранить изменения</Button>
+              <Button 
+                onClick={saveSettings} 
+                className="mr-2 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 transition-all duration-300"
+              >
+                Сохранить изменения
+              </Button>
             </CardFooter>
+          </Card>
+          
+          {/* Preview card to show theme changes */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Предпросмотр темы</CardTitle>
+              <CardDescription>
+                Здесь вы можете увидеть, как выглядит выбранная тема
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Элементы интерфейса</h3>
+                  <div className="space-y-4 p-4 bg-background rounded-lg border">
+                    <Button>Обычная кнопка</Button>
+                    <Button variant="secondary" className="ml-2">Вторичная</Button>
+                    <Button variant="destructive" className="ml-2">Удалить</Button>
+                    <div className="mt-2">
+                      <Label htmlFor="example">Поле ввода</Label>
+                      <Input id="example" placeholder="Пример текста" />
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">Стиль текста</h3>
+                  <div className="space-y-2 p-4 bg-background rounded-lg border">
+                    <h1 className="text-2xl font-bold">Заголовок первого уровня</h1>
+                    <h2 className="text-xl font-semibold">Заголовок второго уровня</h2>
+                    <h3 className="text-lg font-medium">Заголовок третьего уровня</h3>
+                    <p>Обычный текст для демонстрации выбранного размера шрифта и цветовой схемы.</p>
+                    <p className="text-sm text-muted-foreground">Вторичный текст мельче и с другим цветом.</p>
+                    <p className="text-primary">Текст основного цвета темы</p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
           </Card>
         </TabsContent>
 
