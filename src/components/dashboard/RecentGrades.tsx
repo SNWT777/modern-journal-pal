@@ -9,97 +9,80 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-interface GradeData {
-  id: number;
-  student: string;
-  class: string;
-  assignment: string;
-  grade: string;
-  date: string;
-}
-
-const gradeData: GradeData[] = [
-  {
-    id: 1,
-    student: "Иван Петров",
-    class: "Математика",
-    assignment: "Контрольная работа №3",
-    grade: "A",
-    date: "15.05.2023"
-  },
-  {
-    id: 2,
-    student: "Анна Смирнова",
-    class: "Физика",
-    assignment: "Лабораторная работа",
-    grade: "B+",
-    date: "14.05.2023"
-  },
-  {
-    id: 3,
-    student: "Михаил Иванов",
-    class: "История",
-    assignment: "Эссе на тему...",
-    grade: "A-",
-    date: "13.05.2023"
-  },
-  {
-    id: 4,
-    student: "Елена Козлова",
-    class: "Литература",
-    assignment: "Анализ произведения",
-    grade: "B",
-    date: "12.05.2023"
-  },
-  {
-    id: 5,
-    student: "Дмитрий Соколов",
-    class: "Информатика",
-    assignment: "Практическое задание",
-    grade: "A+",
-    date: "11.05.2023"
-  }
-];
+import { useGrades } from "@/hooks/use-grades";
+import { Skeleton } from "@/components/ui/skeleton";
+import { formatDate } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth";
 
 const RecentGrades = () => {
+  const { grades, loading } = useGrades();
+  const { user } = useAuth();
+  
+  // Show only the most recent 5 grades
+  const recentGrades = grades.slice(0, 5);
+
+  // Format date from ISO string to readable format
+  const formatGradeDate = (dateString: string) => {
+    try {
+      return formatDate(new Date(dateString));
+    } catch (e) {
+      return dateString;
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Recent Grades</CardTitle>
+        <CardTitle className="text-lg">
+          {user?.role === "student" ? "Ваши недавние оценки" : "Недавно выставленные оценки"}
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Student</TableHead>
-              <TableHead>Class</TableHead>
-              <TableHead>Assignment</TableHead>
-              <TableHead>Grade</TableHead>
-              <TableHead>Date</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {gradeData.map((grade) => (
-              <TableRow key={grade.id}>
-                <TableCell className="font-medium">{grade.student}</TableCell>
-                <TableCell>{grade.class}</TableCell>
-                <TableCell>{grade.assignment}</TableCell>
-                <TableCell>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    grade.grade.startsWith('A') ? 'bg-green-100 text-green-800' : 
-                    grade.grade.startsWith('B') ? 'bg-blue-100 text-blue-800' :
-                    grade.grade.startsWith('C') ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-red-100 text-red-800'
-                  }`}>
-                    {grade.grade}
-                  </span>
-                </TableCell>
-                <TableCell>{grade.date}</TableCell>
+        {loading ? (
+          <div className="space-y-3">
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-20 w-full" />
+          </div>
+        ) : recentGrades.length === 0 ? (
+          <div className="text-center py-6">
+            <p className="text-muted-foreground">Нет доступных оценок</p>
+          </div>
+        ) : (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>{user?.role === "student" ? "Предмет" : "Ученик"}</TableHead>
+                <TableHead>Класс</TableHead>
+                <TableHead>Задание</TableHead>
+                <TableHead>Оценка</TableHead>
+                <TableHead>Дата</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {recentGrades.map((grade) => (
+                <TableRow key={grade.id}>
+                  <TableCell className="font-medium">
+                    {user?.role === "student" ? grade.assignment_name : grade.student_name}
+                  </TableCell>
+                  <TableCell>{grade.class_name}</TableCell>
+                  <TableCell>{grade.assignment_name || "Не указано"}</TableCell>
+                  <TableCell>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      grade.grade === "5" || grade.grade === "A" || grade.grade === "A+" || grade.grade === "A-" ? 'bg-green-100 text-green-800' : 
+                      grade.grade === "4" || grade.grade === "B" || grade.grade === "B+" || grade.grade === "B-" ? 'bg-blue-100 text-blue-800' :
+                      grade.grade === "3" || grade.grade === "C" || grade.grade === "C+" || grade.grade === "C-" ? 'bg-yellow-100 text-yellow-800' :
+                      grade.grade === "Зачет" ? 'bg-purple-100 text-purple-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {grade.grade}
+                    </span>
+                  </TableCell>
+                  <TableCell>{formatGradeDate(grade.graded_at)}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        )}
       </CardContent>
     </Card>
   );

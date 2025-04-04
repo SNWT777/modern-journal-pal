@@ -3,7 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { BookOpen, Check, Plus, Users, X } from "lucide-react";
+import { BookOpen, Check, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
@@ -44,7 +44,7 @@ const classFormSchema = z.object({
   }),
 });
 
-type ClassFormValues = z.infer<typeof classFormSchema>;
+export type ClassFormValues = z.infer<typeof classFormSchema>;
 
 interface CreateClassFormProps {
   open: boolean;
@@ -67,12 +67,10 @@ const CreateClassForm: React.FC<CreateClassFormProps> = ({
   });
 
   function onSubmit(data: ClassFormValues) {
-    toast.success("Класс успешно создан!");
     if (onClassCreated) {
       onClassCreated(data);
     }
     form.reset(defaultValues);
-    onOpenChange(false);
   }
 
   return (

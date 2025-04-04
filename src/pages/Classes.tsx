@@ -13,79 +13,13 @@ import {
   SelectValue 
 } from "@/components/ui/select";
 import { useAuth } from "@/hooks/use-auth";
+import { useClasses, ClassData } from "@/hooks/use-classes";
 import { toast } from "sonner";
-
-// Initial class data
-const initialClassesData = [
-  {
-    id: 1,
-    name: "Алгебра 9A",
-    subject: "Математика",
-    teacher: "Елена Петровна",
-    studentCount: 28,
-    color: "bg-edu-blue"
-  },
-  {
-    id: 2,
-    name: "Геометрия 9A",
-    subject: "Математика",
-    teacher: "Елена Петровна",
-    studentCount: 28,
-    color: "bg-edu-blue"
-  },
-  {
-    id: 3,
-    name: "Физика 9A",
-    subject: "Физика",
-    teacher: "Андрей Иванович",
-    studentCount: 26,
-    color: "bg-edu-green"
-  },
-  {
-    id: 4,
-    name: "Химия 9А",
-    subject: "Химия",
-    teacher: "Мария Владимировна",
-    studentCount: 25,
-    color: "bg-edu-yellow"
-  },
-  {
-    id: 5,
-    name: "Литература 9A",
-    subject: "Гуманитарные науки",
-    teacher: "Ольга Сергеевна",
-    studentCount: 30,
-    color: "bg-edu-accent"
-  },
-  {
-    id: 6,
-    name: "Русский язык 9A",
-    subject: "Гуманитарные науки",
-    teacher: "Ольга Сергеевна",
-    studentCount: 30,
-    color: "bg-edu-accent"
-  },
-  {
-    id: 7,
-    name: "История 9A",
-    subject: "Гуманитарные науки",
-    teacher: "Дмитрий Александрович",
-    studentCount: 27,
-    color: "bg-edu-red"
-  },
-  {
-    id: 8,
-    name: "Информатика 9A",
-    subject: "Информатика",
-    teacher: "Сергей Павлович",
-    studentCount: 24,
-    color: "bg-edu-lightblue"
-  }
-];
+import { Skeleton } from "@/components/ui/skeleton";
 
 const Classes = () => {
   const { user } = useAuth();
-  const [classesData, setClassesData] = useState(initialClassesData);
+  const { classes, loading, createClass } = useClasses();
   const [searchQuery, setSearchQuery] = useState("");
   const [subjectFilter, setSubjectFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("active");
@@ -96,16 +30,15 @@ const Classes = () => {
   
   // Handle class creation
   const handleClassCreated = (data: any) => {
-    const newClass = {
-      id: classesData.length + 1,
+    if (!canCreateClass) return;
+    
+    createClass({
       name: data.name,
       subject: data.subject,
-      teacher: user?.name || "Преподаватель",
-      studentCount: 0,
       color: data.color
-    };
+    });
     
-    setClassesData([...classesData, newClass]);
+    setCreateClassOpen(false);
   };
   
   // Handle attempt to create class by non-teacher
@@ -118,7 +51,7 @@ const Classes = () => {
   };
   
   // Filter classes based on search and filters
-  const filteredClasses = classesData.filter(classItem => {
+  const filteredClasses = classes.filter(classItem => {
     // Search filter
     const matchesSearch = searchQuery === "" || 
       classItem.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -133,6 +66,9 @@ const Classes = () => {
     
     return matchesSearch && matchesSubject && matchesStatus;
   });
+
+  // Get unique subjects for filter
+  const uniqueSubjects = Array.from(new Set(classes.map(c => c.subject)));
 
   return (
     <div className="container mx-auto p-6 animate-fade-in">
@@ -175,11 +111,9 @@ const Classes = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Все предметы</SelectItem>
-              <SelectItem value="математика">Математика</SelectItem>
-              <SelectItem value="физика">Физика</SelectItem>
-              <SelectItem value="химия">Химия</SelectItem>
-              <SelectItem value="гуманитарные науки">Гуманитарные науки</SelectItem>
-              <SelectItem value="информатика">Информатика</SelectItem>
+              {uniqueSubjects.map((subject) => (
+                <SelectItem key={subject} value={subject.toLowerCase()}>{subject}</SelectItem>
+              ))}
             </SelectContent>
           </Select>
           <Select 
@@ -199,19 +133,37 @@ const Classes = () => {
         </div>
       </div>
       
-      {filteredClasses.length === 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <div key={i} className="h-[200px]">
+              <Skeleton className="h-full w-full" />
+            </div>
+          ))}
+        </div>
+      ) : filteredClasses.length === 0 ? (
         <div className="text-center py-12 blue-card">
           <h3 className="text-xl font-medium mb-2">Классы не найдены</h3>
-          <p className="text-muted-foreground mb-4">По заданным критериям не найдено ни одного класса</p>
-          <Button 
-            onClick={() => {
-              setSearchQuery("");
-              setSubjectFilter("all");
-              setStatusFilter("active");
-            }}
-          >
-            Сбросить фильтры
-          </Button>
+          <p className="text-muted-foreground mb-4">
+            {classes.length === 0
+              ? "У вас еще нет классов. Создайте первый класс!"
+              : "По заданным критериям не найдено ни одного класса"}
+          </p>
+          {classes.length === 0 && canCreateClass ? (
+            <Button onClick={() => setCreateClassOpen(true)}>
+              Создать первый класс
+            </Button>
+          ) : classes.length > 0 ? (
+            <Button 
+              onClick={() => {
+                setSearchQuery("");
+                setSubjectFilter("all");
+                setStatusFilter("active");
+              }}
+            >
+              Сбросить фильтры
+            </Button>
+          ) : null}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -221,7 +173,14 @@ const Classes = () => {
               className="staggered-item staggered-fade-in" 
               style={{ animationDelay: `${index * 0.05}s` }}
             >
-              <ClassCard {...classItem} />
+              <ClassCard 
+                id={classItem.id}
+                name={classItem.name}
+                subject={classItem.subject}
+                teacher={classItem.teacher_name || "Преподаватель"}
+                studentCount={classItem.student_count || 0}
+                color={classItem.color}
+              />
             </div>
           ))}
         </div>

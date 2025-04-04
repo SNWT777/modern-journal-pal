@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import RecentGrades from "@/components/dashboard/RecentGrades";
 import UpcomingAssignments from "@/components/dashboard/UpcomingAssignments";
@@ -11,43 +11,10 @@ import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import CreateClassForm from "@/components/classes/CreateClassForm";
 import GradeStudentForm from "@/components/grades/GradeStudentForm";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Link } from "react-router-dom";
-
-const classesData = [
-  {
-    id: 1,
-    name: "Алгебра 9A",
-    subject: "Математика",
-    teacher: "Елена Петровна",
-    studentCount: 28,
-    color: "bg-edu-blue"
-  },
-  {
-    id: 2,
-    name: "Физика 9A",
-    subject: "Физика",
-    teacher: "Андрей Иванович",
-    studentCount: 26,
-    color: "bg-edu-green"
-  },
-  {
-    id: 3,
-    name: "Литература 9A",
-    subject: "Гуманитарные науки",
-    teacher: "Ольга Сергеевна",
-    studentCount: 30,
-    color: "bg-edu-accent"
-  },
-  {
-    id: 4,
-    name: "История 9A",
-    subject: "Гуманитарные науки",
-    teacher: "Дмитрий Александрович",
-    studentCount: 27,
-    color: "bg-edu-yellow"
-  }
-];
+import { Skeleton } from "@/components/ui/skeleton";
+import { useClasses } from "@/hooks/use-classes";
 
 const taskCompletionData = [
   { subject: "Математика", completion: 75 },
@@ -120,6 +87,7 @@ const studentQuickActionItems = [
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const { classes, loading, createClass } = useClasses();
   const [tab, setTab] = useState("overview");
   const [createClassOpen, setCreateClassOpen] = useState(false);
   const [gradeStudentOpen, setGradeStudentOpen] = useState(false);
@@ -141,64 +109,49 @@ const Dashboard = () => {
         if (isTeacher) {
           setCreateClassOpen(true);
         } else {
-          toast({
-            title: "Ошибка",
-            description: "Только учителя могут создавать классы", 
-            variant: "destructive"
-          });
+          toast.error("Только учителя могут создавать классы");
         }
         break;
       case "grade-student":
         if (isTeacher) {
           setGradeStudentOpen(true);
         } else {
-          toast({
-            title: "Ошибка",
-            description: "Только учителя могут выставлять оценки", 
-            variant: "destructive"
-          });
+          toast.error("Только учителя могут выставлять оценки");
         }
         break;
       case "add-student":
-        toast({
-          title: "Информация",
-          description: "Функция добавления учеников будет доступна в ближайшем обновлении"
-        });
+        toast.info("Функция добавления учеников будет доступна в ближайшем обновлении");
         break;
       case "create-assignment":
-        toast({
-          title: "Информация",
-          description: "Функция создания заданий будет доступна в ближайшем обновлении"
-        });
+        toast.info("Функция создания заданий будет доступна в ближайшем обновлении");
         break;
       case "view-schedule":
-        toast({
-          title: "Информация",
-          description: "Переход к расписанию занятий"
-        });
+        toast.info("Переход к расписанию занятий");
         break;
       case "check-assignments":
-        toast({
-          title: "Информация",
-          description: "Переход к просмотру заданий"
-        });
+        toast.info("Переход к просмотру заданий");
         break;
       case "view-grades":
-        toast({
-          title: "Информация",
-          description: "Переход к просмотру оценок"
-        });
+        toast.info("Переход к просмотру оценок");
         break;
       case "course-materials":
-        toast({
-          title: "Информация",
-          description: "Переход к материалам курса"
-        });
+        toast.info("Переход к материалам курса");
         break;
       default:
         break;
     }
   };
+
+  const handleClassCreated = (data: any) => {
+    createClass({
+      name: data.name,
+      subject: data.subject,
+      color: data.color
+    });
+    setTab("classes");
+  };
+
+  const displayedClasses = classes.slice(0, 4);
 
   return (
     <div className="container mx-auto p-6 animate-fade-in">
@@ -317,23 +270,57 @@ const Dashboard = () => {
             )}
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {classesData.map((classItem, index) => (
-              <div key={classItem.id} className="staggered-item staggered-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-                <ClassCard {...classItem} />
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[1, 2, 3, 4].map((i) => (
+                <Skeleton key={i} className="h-[200px] w-full" />
+              ))}
+            </div>
+          ) : classes.length === 0 ? (
+            <div className="text-center py-12 blue-card">
+              <h3 className="text-xl font-medium mb-2">У вас пока нет классов</h3>
+              <p className="text-muted-foreground mb-4">
+                {isTeacher 
+                  ? "Создайте свой первый класс, чтобы начать работу" 
+                  : "Вы еще не записаны ни на один класс"}
+              </p>
+              {isTeacher && (
+                <Button onClick={() => setCreateClassOpen(true)}>
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Создать первый класс
+                </Button>
+              )}
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {displayedClasses.map((classItem, index) => (
+                  <div key={classItem.id} className="staggered-item staggered-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
+                    <ClassCard 
+                      id={classItem.id}
+                      name={classItem.name}
+                      subject={classItem.subject}
+                      teacher={classItem.teacher_name || "Преподаватель"}
+                      studentCount={classItem.student_count || 0}
+                      color={classItem.color}
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          
-          <div className="flex justify-center mt-8">
-            <Button variant="outline" asChild>
-              <Link to="/classes" className="flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                Перейти ко всем классам
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
+              
+              {classes.length > 4 && (
+                <div className="flex justify-center mt-8">
+                  <Button variant="outline" asChild>
+                    <Link to="/classes" className="flex items-center gap-2">
+                      <Users className="h-4 w-4" />
+                      Перейти ко всем классам ({classes.length})
+                      <ChevronRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
         </TabsContent>
       </Tabs>
       
@@ -342,13 +329,7 @@ const Dashboard = () => {
           <CreateClassForm 
             open={createClassOpen} 
             onOpenChange={setCreateClassOpen} 
-            onClassCreated={() => {
-              toast({
-                title: "Успех",
-                description: "Класс успешно создан!"
-              });
-              setTab("classes");
-            }}
+            onClassCreated={handleClassCreated}
           />
           
           <GradeStudentForm 
