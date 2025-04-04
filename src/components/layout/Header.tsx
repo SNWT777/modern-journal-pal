@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { 
   Bell, Menu, User, Moon, Sun, LogOut, Search, 
@@ -111,7 +112,7 @@ const NavAction = ({ icon, href, label, active, badge, badgeVariant = "default" 
               {icon}
               <span className="hidden md:inline-block">{label}</span>
               {badge && (
-                <Badge variant={badgeVariant} className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center">
+                <Badge variant={badgeVariant as "default" | "destructive" | "outline" | "secondary"} className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center">
                   <span className="text-[10px] font-bold">{badge}</span>
                 </Badge>
               )}
@@ -137,8 +138,7 @@ const NotificationsDropdown = () => {
   const markAllAsRead = () => {
     setHasUnread(false);
     toast({
-      title: "Уведомления",
-      description: "Все уведомления отмечены как прочитанные"
+      description: "Все уведомления отмечены как прочитанными"
     });
   };
 
@@ -189,17 +189,10 @@ const UserDropdown = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      toast({
-        title: "Выход из системы",
-        description: "Вы успешно вышли из системы"
-      });
+      toast.success("Вы успешно вышли из системы");
       navigate("/login");
     } catch (error) {
-      toast({
-        title: "Ошибка",
-        description: "Ошибка при выходе из системы",
-        variant: "destructive"
-      });
+      toast.error("Ошибка при выходе из системы");
     }
   };
 
