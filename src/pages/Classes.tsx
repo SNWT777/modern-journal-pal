@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Plus, Search, Filter } from "lucide-react";
 import ClassCard from "@/components/classes/ClassCard";
@@ -25,10 +24,8 @@ const Classes = () => {
   const [statusFilter, setStatusFilter] = useState("active");
   const [createClassOpen, setCreateClassOpen] = useState(false);
   
-  // Check if user has teacher/admin role
   const canCreateClass = user?.role === "teacher" || user?.role === "admin";
   
-  // Handle class creation
   const handleClassCreated = (data: any) => {
     if (!canCreateClass) return;
     
@@ -41,7 +38,6 @@ const Classes = () => {
     setCreateClassOpen(false);
   };
   
-  // Handle attempt to create class by non-teacher
   const handleCreateClassClick = () => {
     if (canCreateClass) {
       setCreateClassOpen(true);
@@ -50,24 +46,19 @@ const Classes = () => {
     }
   };
   
-  // Filter classes based on search and filters
   const filteredClasses = classes.filter(classItem => {
-    // Search filter
     const matchesSearch = searchQuery === "" || 
       classItem.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       classItem.subject.toLowerCase().includes(searchQuery.toLowerCase());
     
-    // Subject filter
     const matchesSubject = subjectFilter === "all" || 
       classItem.subject.toLowerCase() === subjectFilter.toLowerCase();
     
-    // For this example, we'll assume all classes are active
     const matchesStatus = statusFilter === "all" || statusFilter === "active";
     
     return matchesSearch && matchesSubject && matchesStatus;
   });
 
-  // Get unique subjects for filter
   const uniqueSubjects = Array.from(new Set(classes.map(c => c.subject)));
 
   return (
@@ -177,8 +168,8 @@ const Classes = () => {
                 id={classItem.id}
                 name={classItem.name}
                 subject={classItem.subject}
-                teacher={classItem.teacher_name || "Преподаватель"}
-                studentCount={classItem.student_count !== undefined ? Number(classItem.student_count) : 0}
+                teacher={classItem.teacher_name || "Преподаватель"} 
+                studentCount={Number(classItem.student_count) || 0}
                 color={classItem.color}
               />
             </div>

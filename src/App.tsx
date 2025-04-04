@@ -14,6 +14,8 @@ import Settings from "@/pages/Settings";
 import Login from "@/pages/Login";
 import ResetPassword from "@/pages/ResetPassword";
 import NotFound from "@/pages/NotFound";
+import Attendance from "@/pages/Attendance";
+import Messages from "@/pages/Messages";
 
 import Header from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
@@ -46,6 +48,8 @@ function App() {
                     <Route path="/grades" element={<Grades />} />
                     <Route path="/schedule" element={<Schedule />} />
                     <Route path="/calendar" element={<Calendar />} />
+                    <Route path="/attendance" element={<Attendance />} />
+                    <Route path="/messages" element={<Messages />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/login" element={<Navigate to="/dashboard" />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
@@ -67,6 +71,8 @@ function App() {
               <Route path="/grades" element={<Navigate to="/login" />} />
               <Route path="/schedule" element={<Navigate to="/login" />} />
               <Route path="/calendar" element={<Navigate to="/login" />} />
+              <Route path="/attendance" element={<Navigate to="/login" />} />
+              <Route path="/messages" element={<Navigate to="/login" />} />
               <Route path="/settings" element={<Navigate to="/login" />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
