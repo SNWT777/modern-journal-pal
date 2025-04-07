@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 
@@ -25,7 +25,6 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 
 function App() {
   const { user, isAuthenticated } = useAuth();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
     <BrowserRouter>
@@ -33,15 +32,15 @@ function App() {
         <Toaster />
         {isAuthenticated ? (
           <SidebarProvider>
-            <div className="authenticated-layout flex">
+            <div className="authenticated-layout flex w-full">
               <Sidebar />
               
               <div className="content-wrapper flex-1 flex flex-col">
                 <Header />
                 
-                <main className="flex-1 app-content">
+                <main className="flex-1 app-content p-4">
                   <Routes>
-                    <Route path="/" element={<Index />} />
+                    <Route path="/" element={<Navigate to="/dashboard" />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/classes" element={<Classes />} />
                     <Route path="/students" element={<Students />} />
@@ -62,19 +61,9 @@ function App() {
         ) : (
           <div className="guest-layout flex-1 flex flex-col">
             <Routes>
-              <Route path="/" element={<Index />} />
               <Route path="/login" element={<Login />} />
               <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/dashboard" element={<Navigate to="/login" />} />
-              <Route path="/classes" element={<Navigate to="/login" />} />
-              <Route path="/students" element={<Navigate to="/login" />} />
-              <Route path="/grades" element={<Navigate to="/login" />} />
-              <Route path="/schedule" element={<Navigate to="/login" />} />
-              <Route path="/calendar" element={<Navigate to="/login" />} />
-              <Route path="/attendance" element={<Navigate to="/login" />} />
-              <Route path="/messages" element={<Navigate to="/login" />} />
-              <Route path="/settings" element={<Navigate to="/login" />} />
-              <Route path="*" element={<NotFound />} />
+              <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
           </div>
         )}

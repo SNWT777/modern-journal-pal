@@ -301,7 +301,7 @@ const Dashboard = () => {
                       name={classItem.name}
                       subject={classItem.subject}
                       teacher={classItem.teacher_name || "Преподаватель"}
-                      studentCount={Number(classItem.student_count || 0)}
+                      studentCount={32}
                       color={classItem.color}
                     />
                   </div>

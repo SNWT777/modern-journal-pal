@@ -1,8 +1,8 @@
+
 import React, { useState, useEffect } from "react";
 import { 
   Bell, Menu, User, Moon, Sun, LogOut, Search, 
-  BookOpen, Calendar, Settings, PenSquare, UserCheck, 
-  Mail, Info, School, Clock, MessageSquare
+  Calendar, Settings, MessageSquare, Clock 
 } from "lucide-react";
 import { 
   DropdownMenu, 
@@ -40,7 +40,7 @@ const Header = () => {
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
-    toast.success(`Тема переключена на ${theme === "dark" ? "светлую" : "темную"}`);
+    toast(`Тема переключена на ${theme === "dark" ? "светлую" : "темную"}`);
   };
 
   return (
@@ -51,15 +51,14 @@ const Header = () => {
             <Menu className="h-5 w-5" />
           </Button>
         </SidebarTrigger>
-        <Link to="/" className="group flex items-center">
-          <School className="h-7 w-7 mr-2 text-primary transition-all group-hover:scale-110" />
+        <Link to="/dashboard" className="group flex items-center">
           <h1 className="font-bold text-xl bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent group-hover:scale-105 transition-transform duration-300">
             Школьный Журнал
           </h1>
         </Link>
       </div>
 
-      <div className={`absolute left-1/2 transform -translate-x-1/2 transition-all duration-300 ${searchOpen ? "w-1/2" : "w-1/3"}`}>
+      <div className="flex-1 max-w-xl mx-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input 
@@ -73,23 +72,8 @@ const Header = () => {
       </div>
 
       <div className="flex items-center gap-2">
-        <NavAction 
-          icon={<Clock className="h-5 w-5" />} 
-          href="/attendance" 
-          label="Посещаемость" 
-          active={location.pathname === "/attendance"}
-          badge={2}
-        />
-
-        <NavAction 
-          icon={<MessageSquare className="h-5 w-5" />} 
-          href="/messages" 
-          label="Сообщения" 
-          active={location.pathname === "/messages"}
-          badge={5}
-          badgeVariant="destructive"
-        />
-
+        <MainNavigation location={location} />
+        
         <Button variant="ghost" size="icon" onClick={toggleTheme} className="hover:bg-primary/10 text-foreground">
           {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
         </Button>
@@ -101,7 +85,42 @@ const Header = () => {
   );
 };
 
-const NavAction = ({ icon, href, label, active, badge, badgeVariant = "default" }) => {
+const MainNavigation = ({ location }) => {
+  const navItems = [
+    { 
+      icon: <Calendar className="h-5 w-5" />, 
+      href: "/calendar", 
+      label: "Календарь", 
+      active: location.pathname === "/calendar" 
+    },
+    { 
+      icon: <Clock className="h-5 w-5" />, 
+      href: "/attendance", 
+      label: "Посещаемость", 
+      active: location.pathname === "/attendance",
+      badge: 2,
+      badgeVariant: "default"
+    },
+    { 
+      icon: <MessageSquare className="h-5 w-5" />, 
+      href: "/messages", 
+      label: "Сообщения", 
+      active: location.pathname === "/messages",
+      badge: 5,
+      badgeVariant: "destructive"
+    }
+  ];
+
+  return (
+    <nav className="hidden md:flex items-center gap-1">
+      {navItems.map((item, index) => (
+        <NavButton key={index} {...item} />
+      ))}
+    </nav>
+  );
+};
+
+const NavButton = ({ icon, href, label, active, badge, badgeVariant = "default" }) => {
   return (
     <TooltipProvider>
       <Tooltip>
@@ -111,7 +130,7 @@ const NavAction = ({ icon, href, label, active, badge, badgeVariant = "default" 
               {icon}
               <span className="hidden md:inline-block">{label}</span>
               {badge && (
-                <Badge variant={badgeVariant as "default" | "destructive" | "outline" | "secondary"} className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center">
+                <Badge variant={badgeVariant} className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center">
                   <span className="text-[10px] font-bold">{badge}</span>
                 </Badge>
               )}
@@ -151,7 +170,7 @@ const NotificationsDropdown = () => {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-80" align="end" forceMount>
+      <DropdownMenuContent className="w-80" align="end">
         <DropdownMenuLabel className="flex items-center justify-between">
           <span>Уведомления</span>
           <Button variant="ghost" size="sm" className="h-auto text-xs p-1" onClick={markAllAsRead}>
@@ -249,7 +268,6 @@ const UserDropdown = () => {
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link to="/grades" className="flex w-full cursor-pointer">
-              <PenSquare className="mr-2 h-4 w-4" />
               <span>Мои оценки</span>
             </Link>
           </DropdownMenuItem>

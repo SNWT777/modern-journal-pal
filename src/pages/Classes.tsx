@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Plus, Search, Filter } from "lucide-react";
 import ClassCard from "@/components/classes/ClassCard";
@@ -170,7 +169,7 @@ const Classes = () => {
                 name={classItem.name}
                 subject={classItem.subject}
                 teacher={classItem.teacher_name || "Преподаватель"} 
-                studentCount={Number(classItem.student_count || 0)}
+                studentCount={Number(classItem.student_count || 0)} // Изменено с строки 169
                 color={classItem.color}
               />
             </div>
