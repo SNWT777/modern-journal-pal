@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { 
   Bell, Menu, User, Moon, Sun, LogOut, Search, 
@@ -137,9 +136,7 @@ const NotificationsDropdown = () => {
 
   const markAllAsRead = () => {
     setHasUnread(false);
-    toast({
-      description: "Все уведомления отмечены как прочитанными"
-    });
+    toast("Все уведомления отмечены как прочитанными");
   };
 
   return (

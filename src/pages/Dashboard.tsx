@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import RecentGrades from "@/components/dashboard/RecentGrades";
