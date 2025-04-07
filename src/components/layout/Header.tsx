@@ -85,8 +85,17 @@ const Header = () => {
   );
 };
 
+interface NavItem {
+  icon: React.ReactNode;
+  href: string;
+  label: string;
+  active: boolean;
+  badge?: number;
+  badgeVariant?: "default" | "destructive" | "secondary" | "outline";
+}
+
 const MainNavigation = ({ location }) => {
-  const navItems = [
+  const navItems: NavItem[] = [
     { 
       icon: <Calendar className="h-5 w-5" />, 
       href: "/calendar", 
@@ -120,7 +129,16 @@ const MainNavigation = ({ location }) => {
   );
 };
 
-const NavButton = ({ icon, href, label, active, badge, badgeVariant = "default" }) => {
+interface NavButtonProps {
+  icon: React.ReactNode;
+  href: string;
+  label: string;
+  active: boolean;
+  badge?: number;
+  badgeVariant?: "default" | "destructive" | "secondary" | "outline";
+}
+
+const NavButton = ({ icon, href, label, active, badge, badgeVariant = "default" }: NavButtonProps) => {
   return (
     <TooltipProvider>
       <Tooltip>
@@ -129,7 +147,7 @@ const NavButton = ({ icon, href, label, active, badge, badgeVariant = "default" 
             <Link to={href} className="flex items-center gap-1.5">
               {icon}
               <span className="hidden md:inline-block">{label}</span>
-              {badge && (
+              {badge !== undefined && (
                 <Badge variant={badgeVariant} className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center">
                   <span className="text-[10px] font-bold">{badge}</span>
                 </Badge>

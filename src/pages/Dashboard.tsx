@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import DashboardStats from "@/components/dashboard/DashboardStats";
 import RecentGrades from "@/components/dashboard/RecentGrades";
@@ -301,7 +302,7 @@ const Dashboard = () => {
                       name={classItem.name}
                       subject={classItem.subject}
                       teacher={classItem.teacher_name || "Преподаватель"}
-                      studentCount={32}
+                      studentCount={Number(classItem.student_count || 0)}
                       color={classItem.color}
                     />
                   </div>
