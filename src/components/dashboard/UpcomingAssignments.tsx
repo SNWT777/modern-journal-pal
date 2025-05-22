@@ -97,9 +97,9 @@ const UpcomingAssignments = () => {
               >
                 <div className={`
                   p-2 rounded-full mr-3 shrink-0
-                  ${assignment.priority === 'high' ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' : 
-                    assignment.priority === 'medium' ? 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                    'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'}
+                  ${assignment.priority === 'high' ? 'bg-destructive/20 text-destructive' : 
+                    assignment.priority === 'medium' ? 'bg-warning/20 text-warning' :
+                    'bg-info/20 text-info'}
                 `}>
                   {completedTasks.includes(assignment.id) ? (
                     <CheckCircle2 className="h-5 w-5" />

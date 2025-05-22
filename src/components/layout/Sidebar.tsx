@@ -73,7 +73,7 @@ const AppSidebar = () => {
                             to={item.path}
                             className={({ isActive }) => 
                               isActive 
-                                ? "text-white bg-sidebar-accent" 
+                                ? "text-sidebar-accent-foreground bg-sidebar-accent" 
                                 : "hover:bg-sidebar-accent/30 transition-colors"
                             }
                           >
@@ -118,7 +118,7 @@ const AppSidebar = () => {
                             to={item.path}
                             className={({ isActive }) => 
                               isActive 
-                                ? "text-white bg-sidebar-accent" 
+                                ? "text-sidebar-accent-foreground bg-sidebar-accent" 
                                 : "hover:bg-sidebar-accent/30 transition-colors"
                             }
                           >
@@ -177,7 +177,7 @@ const AppSidebar = () => {
                 to="/settings" 
                 className={({ isActive }) => 
                   isActive 
-                    ? "text-white bg-sidebar-accent" 
+                    ? "text-sidebar-accent-foreground bg-sidebar-accent" 
                     : "hover:bg-sidebar-accent/30 transition-colors"
                 }
               >

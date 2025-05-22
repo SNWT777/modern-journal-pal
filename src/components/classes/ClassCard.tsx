@@ -7,31 +7,49 @@ import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
+/**
+ * Props for the ClassCard component.
+ */
 interface ClassCardProps {
+  /** Unique identifier for the class. */
   id: number;
+  /** Name of the class. */
   name: string;
+  /** Subject of the class. */
   subject: string;
+  /** Name of the teacher. */
   teacher: string;
+  /** Number of students enrolled in the class. */
   studentCount: number;
+  /** Tailwind CSS class for the card's color accent (e.g., "bg-blue-500"). */
   color: string;
+  /** Formatted string indicating the date and time of the next lesson. */
+  nextLesson: string;
+  /** Percentage of class material completed by the student. */
+  completionPercentage: number;
+  /** Boolean indicating if there are new assignments for the class. */
+  hasAssignments: boolean;
 }
 
+/**
+ * ClassCard component displays a summary of a class, including its name, subject,
+ * teacher, student count, next lesson, completion progress, and assignment status.
+ * It allows navigation to the detailed class page.
+ */
 const ClassCard: React.FC<ClassCardProps> = ({
   id,
   name,
   subject,
   teacher,
   studentCount,
-  color
+  color,
+  nextLesson,
+  completionPercentage,
+  hasAssignments
 }) => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
   
-  // Mock data for class card
-  const nextLesson = "Сегодня, 13:45";
-  const completionPercentage = 68;
-  const hasAssignments = Math.random() > 0.5;
-
   return (
     <Card 
       className={cn(
@@ -85,9 +103,14 @@ const ClassCard: React.FC<ClassCardProps> = ({
           </div>
           
           <div className="w-full bg-secondary h-1.5 rounded-full mt-1 overflow-hidden">
-            <div 
-              className={`h-full rounded-full ${color.replace('bg-', 'bg-')} transition-all duration-1000 ease-in-out`} 
-              style={{ width: `${completionPercentage}%` }} 
+            <div
+              role="progressbar"
+              aria-valuenow={completionPercentage}
+              aria-valuemin="0"
+              aria-valuemax="100"
+              aria-label={`Прогресс по классу ${name}: ${completionPercentage}%`}
+              className={`h-full rounded-full ${color.replace('bg-', 'bg-')} transition-all duration-1000 ease-in-out`}
+              style={{ width: `${completionPercentage}%` }}
             />
           </div>
         </div>

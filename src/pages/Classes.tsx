@@ -12,6 +12,7 @@ import {
   SelectTrigger, 
   SelectValue 
 } from "@/components/ui/select";
+import { Card, CardContent } from "@/components/ui/card"; // Added Card, CardContent
 import { useAuth } from "@/hooks/use-auth";
 import { useClasses, ClassData } from "@/hooks/use-classes";
 import { toast } from "sonner";
@@ -70,7 +71,8 @@ const Classes = () => {
           <p className="text-muted-foreground">Управление классами и учащимися</p>
         </div>
         <Button 
-          className="mt-4 md:mt-0 blue-white-button" 
+          variant="default" // Updated class
+          className="mt-4 md:mt-0" 
           onClick={handleCreateClassClick}
         >
           <Plus className="mr-2 h-4 w-4" />
@@ -78,7 +80,8 @@ const Classes = () => {
         </Button>
       </div>
       
-      <div className="blue-card p-6 mb-8 animate-scale-in">
+      {/* Filter Section Updated */}
+      <Card className="p-6 mb-8 animate-scale-in">
         <h2 className="text-lg font-medium mb-4 flex items-center">
           <Filter className="mr-2 h-5 w-5 text-primary" />
           Фильтры
@@ -134,29 +137,32 @@ const Classes = () => {
           ))}
         </div>
       ) : filteredClasses.length === 0 ? (
-        <div className="text-center py-12 blue-card">
-          <h3 className="text-xl font-medium mb-2">Классы не найдены</h3>
-          <p className="text-muted-foreground mb-4">
-            {classes.length === 0
-              ? "У вас еще нет классов. Создайте первый класс!"
-              : "По заданным критериям не найдено ни одного класса"}
-          </p>
-          {classes.length === 0 && canCreateClass ? (
-            <Button onClick={() => setCreateClassOpen(true)}>
-              Создать первый класс
-            </Button>
-          ) : classes.length > 0 ? (
-            <Button 
-              onClick={() => {
-                setSearchQuery("");
-                setSubjectFilter("all");
-                setStatusFilter("active");
-              }}
-            >
-              Сбросить фильтры
-            </Button>
-          ) : null}
-        </div>
+        // Empty State Updated
+        <Card className="text-center py-12">
+          <CardContent>
+            <h3 className="text-xl font-medium mb-2">Классы не найдены</h3>
+            <p className="text-muted-foreground mb-4">
+              {classes.length === 0
+                ? "У вас еще нет классов. Создайте первый класс!"
+                : "По заданным критериям не найдено ни одного класса"}
+            </p>
+            {classes.length === 0 && canCreateClass ? (
+              <Button onClick={() => setCreateClassOpen(true)}>
+                Создать первый класс
+              </Button>
+            ) : classes.length > 0 ? (
+              <Button 
+                onClick={() => {
+                  setSearchQuery("");
+                  setSubjectFilter("all");
+                  setStatusFilter("active");
+                }}
+              >
+                Сбросить фильтры
+              </Button>
+            ) : null}
+          </CardContent>
+        </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredClasses.map((classItem, index) => (

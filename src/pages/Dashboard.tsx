@@ -28,29 +28,29 @@ const teacherQuickActionItems = [
   { 
     title: "Создать новый класс",
     icon: BookOpen,
-    color: "text-blue-600",
-    bgColor: "bg-blue-100",
+    color: "text-primary", // Updated
+    bgColor: "bg-primary/10", // Updated
     action: "create-class"
   },
   { 
     title: "Выставить оценку",
     icon: FileText,
-    color: "text-green-600",
-    bgColor: "bg-green-100",
+    color: "text-accent", // Updated
+    bgColor: "bg-accent/10", // Updated
     action: "grade-student"
   },
   { 
     title: "Добавить ученика",
     icon: UserPlus,
-    color: "text-purple-600",
-    bgColor: "bg-purple-100",
+    color: "text-success", // Updated
+    bgColor: "bg-success/10", // Updated
     action: "add-student"
   },
   { 
     title: "Создать задание",
     icon: CheckSquare,
-    color: "text-amber-600",
-    bgColor: "bg-amber-100",
+    color: "text-warning", // Updated
+    bgColor: "bg-warning/10", // Updated
     action: "create-assignment"
   },
 ];
@@ -59,29 +59,29 @@ const studentQuickActionItems = [
   { 
     title: "Просмотреть расписание",
     icon: CheckSquare,
-    color: "text-blue-600",
-    bgColor: "bg-blue-100",
+    color: "text-primary", // Updated
+    bgColor: "bg-primary/10", // Updated
     action: "view-schedule"
   },
   { 
     title: "Проверить задания",
     icon: FileText,
-    color: "text-green-600",
-    bgColor: "bg-green-100",
+    color: "text-info", // Updated
+    bgColor: "bg-info/10", // Updated
     action: "check-assignments"
   },
   { 
     title: "Посмотреть оценки",
     icon: BookOpen,
-    color: "text-purple-600",
-    bgColor: "bg-purple-100",
+    color: "text-success", // Updated
+    bgColor: "bg-success/10", // Updated
     action: "view-grades"
   },
   { 
     title: "Материалы курса",
     icon: Users,
-    color: "text-amber-600",
-    bgColor: "bg-amber-100",
+    color: "text-accent", // Updated
+    bgColor: "bg-accent/10", // Updated
     action: "course-materials"
   },
 ];
@@ -156,14 +156,16 @@ const Dashboard = () => {
 
   return (
     <div className="container mx-auto p-6 animate-fade-in">
-      <div className="mb-8 blue-white-gradient text-white p-6 rounded-lg shadow-md">
+      {/* Greeting Section Updated */}
+      <div className="mb-8 bg-primary text-primary-foreground p-6 rounded-lg shadow-md">
         <h1 className="text-3xl font-bold mb-2 animate-slide-down">{getGreeting()}, {user?.name || 'Пользователь'}!</h1>
-        <p className="text-white/80 animate-slide-down" style={{ animationDelay: '0.1s' }}>
+        <p className="text-primary-foreground/80 animate-slide-down" style={{ animationDelay: '0.1s' }}>
           {isTeacher ? 'Вот ваш обзор на сегодня' : 'Добро пожаловать в вашу учебную панель'}
         </p>
       </div>
       
-      <Card className="mb-8 blue-white-card">
+      {/* Quick Actions Card Updated - removed blue-white-card */}
+      <Card className="mb-8"> 
         <CardHeader>
           <CardTitle>Быстрые действия</CardTitle>
           <CardDescription>
@@ -194,10 +196,11 @@ const Dashboard = () => {
       </Card>
       
       <Tabs defaultValue="overview" value={tab} onValueChange={setTab} className="mb-8">
-        <TabsList className="mb-6 bg-blue-50 dark:bg-blue-900/20 p-1">
-          <TabsTrigger value="overview" className="text-base data-[state=active]:bg-white dark:data-[state=active]:bg-blue-800">Обзор</TabsTrigger>
-          <TabsTrigger value="tasks" className="text-base data-[state=active]:bg-white dark:data-[state=active]:bg-blue-800">Задания</TabsTrigger>
-          <TabsTrigger value="classes" className="text-base data-[state=active]:bg-white dark:data-[state=active]:bg-blue-800">Классы</TabsTrigger>
+        {/* TabsList Updated */}
+        <TabsList className="mb-6 bg-secondary dark:bg-secondary p-1 rounded-md">
+          <TabsTrigger value="overview" className="text-base data-[state=active]:bg-background data-[state=active]:text-foreground dark:data-[state=active]:bg-card rounded-sm">Обзор</TabsTrigger>
+          <TabsTrigger value="tasks" className="text-base data-[state=active]:bg-background data-[state=active]:text-foreground dark:data-[state=active]:bg-card rounded-sm">Задания</TabsTrigger>
+          <TabsTrigger value="classes" className="text-base data-[state=active]:bg-background data-[state=active]:text-foreground dark:data-[state=active]:bg-card rounded-sm">Классы</TabsTrigger>
         </TabsList>
         
         <TabsContent value="overview" className="animate-fade-in">
@@ -215,12 +218,15 @@ const Dashboard = () => {
         
         <TabsContent value="tasks" className="animate-fade-in">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="blue-card">
-              <h3 className="text-xl font-bold mb-4 flex items-center">
-                <CheckSquare className="mr-2 h-5 w-5 text-primary" />
-                Прогресс заданий
-              </h3>
-              <div className="space-y-4">
+            {/* Tasks Tab Card 1 Updated */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <CheckSquare className="mr-2 h-5 w-5 text-primary" />
+                  Прогресс заданий
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 {taskCompletionData.map((task, index) => (
                   <div key={index} className="staggered-item staggered-fade-in">
                     <div className="flex justify-between mb-1">
@@ -230,17 +236,21 @@ const Dashboard = () => {
                     <Progress value={task.completion} className="h-2" />
                   </div>
                 ))}
-              </div>
-            </div>
+              </CardContent>
+            </Card>
             
-            <div className="blue-card">
-              <h3 className="text-xl font-bold mb-4 flex items-center">
-                <BookOpen className="mr-2 h-5 w-5 text-primary" />
-                Ближайшие дедлайны
-              </h3>
-              <div className="space-y-3">
+            {/* Tasks Tab Card 2 Updated */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <BookOpen className="mr-2 h-5 w-5 text-primary" />
+                  Ближайшие дедлайны
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
                 {[1, 2, 3].map((_, index) => (
-                  <div key={index} className="flex items-center justify-between p-3 rounded-md bg-white dark:bg-blue-900/20 hover:bg-blue-50 dark:hover:bg-blue-800/30 transition-colors staggered-item staggered-fade-in">
+                  // Item styling updated to use Card component or theme-consistent background
+                  <Card key={index} className="flex items-center justify-between p-3 hover:bg-secondary/80 transition-colors staggered-item staggered-fade-in">
                     <div>
                       <h4 className="font-medium">Тест по главе {index + 3}</h4>
                       <p className="text-sm text-muted-foreground">Математика</p>
@@ -264,7 +274,8 @@ const Dashboard = () => {
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold text-gradient">Ваши классы</h2>
             {isTeacher && (
-              <Button className="blue-white-button" onClick={() => setCreateClassOpen(true)}>
+              // Add Class Button Updated
+              <Button variant="default" onClick={() => setCreateClassOpen(true)}>
                 <PlusCircle className="mr-2 h-4 w-4" />
                 Добавить класс
               </Button>
@@ -278,20 +289,23 @@ const Dashboard = () => {
               ))}
             </div>
           ) : classes.length === 0 ? (
-            <div className="text-center py-12 blue-card">
-              <h3 className="text-xl font-medium mb-2">У вас пока нет классов</h3>
-              <p className="text-muted-foreground mb-4">
-                {isTeacher 
-                  ? "Создайте свой первый класс, чтобы начать работу" 
-                  : "Вы еще не записаны ни на один класс"}
-              </p>
-              {isTeacher && (
-                <Button onClick={() => setCreateClassOpen(true)}>
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Создать первый класс
-                </Button>
-              )}
-            </div>
+             // Empty state card updated
+            <Card className="text-center py-12">
+              <CardContent>
+                <h3 className="text-xl font-medium mb-2">У вас пока нет классов</h3>
+                <p className="text-muted-foreground mb-4">
+                  {isTeacher 
+                    ? "Создайте свой первый класс, чтобы начать работу" 
+                    : "Вы еще не записаны ни на один класс"}
+                </p>
+                {isTeacher && (
+                  <Button onClick={() => setCreateClassOpen(true)}>
+                    <PlusCircle className="mr-2 h-4 w-4" />
+                    Создать первый класс
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
           ) : (
             <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

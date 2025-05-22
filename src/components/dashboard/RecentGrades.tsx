@@ -68,11 +68,11 @@ const RecentGrades = () => {
                   <TableCell>{grade.assignment_name || "Не указано"}</TableCell>
                   <TableCell>
                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      grade.grade === "5" || grade.grade === "A" || grade.grade === "A+" || grade.grade === "A-" ? 'bg-green-100 text-green-800' : 
-                      grade.grade === "4" || grade.grade === "B" || grade.grade === "B+" || grade.grade === "B-" ? 'bg-blue-100 text-blue-800' :
-                      grade.grade === "3" || grade.grade === "C" || grade.grade === "C+" || grade.grade === "C-" ? 'bg-yellow-100 text-yellow-800' :
-                      grade.grade === "Зачет" ? 'bg-purple-100 text-purple-800' :
-                      'bg-red-100 text-red-800'
+                      grade.grade === "5" || grade.grade === "A" || grade.grade === "A+" || grade.grade === "A-" ? 'bg-success/10 text-success' : 
+                      grade.grade === "4" || grade.grade === "B" || grade.grade === "B+" || grade.grade === "B-" ? 'bg-info/10 text-info' :
+                      grade.grade === "3" || grade.grade === "C" || grade.grade === "C+" || grade.grade === "C-" ? 'bg-warning/10 text-warning' :
+                      grade.grade === "Зачет" ? 'bg-accent/10 text-accent' :
+                      'bg-destructive/10 text-destructive'
                     }`}>
                       {grade.grade}
                     </span>
