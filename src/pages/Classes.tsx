@@ -70,7 +70,7 @@ const Classes = () => {
           <p className="text-muted-foreground">Управление классами и учащимися</p>
         </div>
         <Button 
-          className="mt-4 md:mt-0 blue-white-button" 
+          className="mt-4 md:mt-0 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white"
           onClick={handleCreateClassClick}
         >
           <Plus className="mr-2 h-4 w-4" />
@@ -78,7 +78,7 @@ const Classes = () => {
         </Button>
       </div>
       
-      <div className="blue-card p-6 mb-8 animate-scale-in">
+      <div className="glass-card p-6 mb-8 animate-scale-in">
         <h2 className="text-lg font-medium mb-4 flex items-center">
           <Filter className="mr-2 h-5 w-5 text-primary" />
           Фильтры
@@ -134,7 +134,7 @@ const Classes = () => {
           ))}
         </div>
       ) : filteredClasses.length === 0 ? (
-        <div className="text-center py-12 blue-card">
+        <div className="text-center py-12 glass-card">
           <h3 className="text-xl font-medium mb-2">Классы не найдены</h3>
           <p className="text-muted-foreground mb-4">
             {classes.length === 0
@@ -142,7 +142,8 @@ const Classes = () => {
               : "По заданным критериям не найдено ни одного класса"}
           </p>
           {classes.length === 0 && canCreateClass ? (
-            <Button onClick={() => setCreateClassOpen(true)}>
+            <Button onClick={() => setCreateClassOpen(true)}
+              className="bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white">
               Создать первый класс
             </Button>
           ) : classes.length > 0 ? (
@@ -172,6 +173,9 @@ const Classes = () => {
                 teacher={classItem.teacher_name || "Преподаватель"} 
                 studentCount={Number(classItem.student_count || 0)}
                 color={classItem.color}
+                nextLesson="Пн, 10:00"
+                completionPercentage={75}
+                hasAssignments={index % 3 === 0}
               />
             </div>
           ))}

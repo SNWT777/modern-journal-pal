@@ -24,11 +24,11 @@ interface ClassCardProps {
   /** Tailwind CSS class for the card's color accent (e.g., "bg-blue-500"). */
   color: string;
   /** Formatted string indicating the date and time of the next lesson. */
-  nextLesson: string;
+  nextLesson?: string;
   /** Percentage of class material completed by the student. */
-  completionPercentage: number;
+  completionPercentage?: number;
   /** Boolean indicating if there are new assignments for the class. */
-  hasAssignments: boolean;
+  hasAssignments?: boolean;
 }
 
 /**
@@ -43,9 +43,9 @@ const ClassCard: React.FC<ClassCardProps> = ({
   teacher,
   studentCount,
   color,
-  nextLesson,
-  completionPercentage,
-  hasAssignments
+  nextLesson = "Не указано",
+  completionPercentage = 0,
+  hasAssignments = false
 }) => {
   const navigate = useNavigate();
   const [isHovered, setIsHovered] = useState(false);
@@ -119,7 +119,7 @@ const ClassCard: React.FC<ClassCardProps> = ({
         <Button 
           variant="secondary" 
           size="sm" 
-          className="w-full group"
+          className="w-full group hover:bg-primary hover:text-primary-foreground"
           onClick={() => navigate(`/classes/${id}`)}
         >
           <BookOpen className="h-4 w-4 mr-2 transition-transform group-hover:scale-110" />
